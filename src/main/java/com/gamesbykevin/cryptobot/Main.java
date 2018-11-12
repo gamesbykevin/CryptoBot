@@ -6,6 +6,7 @@ import com.gamesbykevin.cryptobot.calculator.CalculatorGdax;
 import com.gamesbykevin.cryptobot.indicator.Indicator;
 import com.gamesbykevin.cryptobot.strategy.Strategy;
 import com.gamesbykevin.cryptobot.strategy.StrategyHelper;
+import com.gamesbykevin.cryptobot.util.Properties;
 import com.gamesbykevin.cryptobot.util.Util;
 
 import java.math.BigDecimal;
@@ -31,7 +32,7 @@ public class Main extends Thread implements Runnable {
         try {
 
             Broker broker = new Broker();
-            broker.setFunds(Util.round(ROUND_DECIMALS_PRICE, BigDecimal.valueOf(1000L)));
+            broker.setFunds(Util.round(ROUND_DECIMALS_PRICE, new BigDecimal(Properties.getProperty("funds"))));
 
             Calculator calculator = new CalculatorGdax();
 

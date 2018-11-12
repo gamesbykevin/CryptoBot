@@ -74,13 +74,25 @@ public class CalculatorGdax extends Calculator {
                 strategy.calculate(getHistory().getCandles());
                 strategy.display();
 
-                if (strategy.hasSignalBuy()) {
-                    broker.purchase(getPrice());
-                    System.out.println("Buy");
-                } else if (broker.getTradePending() != null && strategy.hasSignalSell()) {
-                    broker.sell(getPrice());
-                    System.out.println("Sell");
+                //if we don't have a pending trade
+                if (broker.getTradePending() == null) {
+
+                    //do we have a signal to buy?
+                    if (strategy.hasSignalBuy()) {
+                        broker.purchase(getPrice());
+                        System.out.println("Buy");
+                    }
+
+                } else {
+
+                    //do we have a signal to sell our pending trade?
+                    if (strategy.hasSignalSell()) {
+                        broker.sell(getPrice());
+                        System.out.println("Sell");
+                    }
+
                 }
+
             }
         }
     }
