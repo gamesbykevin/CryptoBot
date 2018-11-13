@@ -10,6 +10,15 @@ public class Properties {
     //location of property file
     public static final String PROPERTY_FILE = "./config.properties";
 
+    /**
+     * Are we paper trading? (aka not using real money)
+     */
+    public static final boolean PAPER_TRADING = Boolean.parseBoolean(getProperty("paperTrading"));
+
+    public static final String[] STRATEGIES = getProperty("strategies").split(",");
+    public static final String[] DATA_FEED_URL = getProperty("dataFeedUrl").split(",");
+    public static final String[] TICKER_PRICE_URL = getProperty("tickerPriceUrl").split(",");
+
     public static String getProperty(String key) {
 
         try {

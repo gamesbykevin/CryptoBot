@@ -29,17 +29,17 @@ public final class Strategy1 extends Strategy {
         SimpleMovingAverage smaShort = (SimpleMovingAverage)getIndicator(indexSmaShort);
         SimpleMovingAverage smaLong = (SimpleMovingAverage)getIndicator(indexSmaLong);
 
-        double smaShort1 = getRecent(smaShort.getValues());
-        double smaShort2 = getRecent(smaShort.getValues(), 2);
+        double smaShortCurrent = getRecent(smaShort.getValues());
+        double smaShortPrevious = getRecent(smaShort.getValues(), 2);
 
-        double smaLong1 = getRecent(smaLong.getValues());
-        double smaLong2 = getRecent(smaLong.getValues(), 2);
+        double smaLongCurrent = getRecent(smaLong.getValues());
+        double smaLongPrevious = getRecent(smaLong.getValues(), 2);
 
         //if we just crossed above the long sma, we have a signal
-        if (smaShort1 > smaLong1 && smaShort2 < smaLong2)
+        if (smaShortCurrent > smaLongCurrent && smaShortPrevious < smaLongPrevious)
             return true;
 
-        return true;
+        return false;
     }
 
     @Override
@@ -49,14 +49,11 @@ public final class Strategy1 extends Strategy {
         SimpleMovingAverage smaShort = (SimpleMovingAverage)getIndicator(indexSmaShort);
         SimpleMovingAverage smaLong = (SimpleMovingAverage)getIndicator(indexSmaLong);
 
-        double smaShort1 = getRecent(smaShort.getValues());
-        double smaShort2 = getRecent(smaShort.getValues(), 2);
+        double smaShortCurrent = getRecent(smaShort.getValues());
+        double smaLongCurrent = getRecent(smaLong.getValues());
 
-        double smaLong1 = getRecent(smaLong.getValues());
-        double smaLong2 = getRecent(smaLong.getValues(), 2);
-
-        //if we just crossed below the long sma, we have a signal
-        if (smaShort1 < smaLong1 && smaShort2 > smaLong2)
+        //if we went below the long sma, we have a signal
+        if (smaShortCurrent < smaLongCurrent)
             return true;
 
         return false;

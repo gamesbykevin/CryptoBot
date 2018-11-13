@@ -1,12 +1,11 @@
 package com.gamesbykevin.cryptobot.trade;
 
-import com.gamesbykevin.cryptobot.broker.Broker;
 import com.gamesbykevin.cryptobot.util.Util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import static com.gamesbykevin.cryptobot.broker.Broker.ROUND_DECIMALS_QUANTITY;
+import static com.gamesbykevin.cryptobot.broker.BrokerHelper.ROUND_DECIMALS_QUANTITY;
 
 public class TradeHelper {
 

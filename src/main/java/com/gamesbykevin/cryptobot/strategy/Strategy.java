@@ -55,6 +55,9 @@ public abstract class Strategy {
         for (int index = 0; index < getIndicators().size(); index++) {
             getIndicator(index).calculate(candles);
         }
+
+        //display our data
+        display();
     }
 
     /**
@@ -72,7 +75,7 @@ public abstract class Strategy {
     public void display() {
 
         for (int index = 0; index < getIndicators().size(); index++) {
-            getIndicator(index).display("Indicator " + index + ":");
+            getIndicator(index).display();
         }
     }
 

@@ -4,6 +4,20 @@ import com.gamesbykevin.cryptobot.strategy.Strategy.Key;
 
 public class StrategyHelper {
 
+    public static Strategy create(String strategyName) throws Exception {
+
+        //look through our list to find the strategy
+        for (Key key : Key.values()) {
+
+            //if the string matches create this strategy
+            if (key.toString().equalsIgnoreCase(strategyName))
+                return create(key);
+        }
+
+        //if we didn't find a match return null
+        return null;
+    }
+
     public static Strategy create(Key key) throws Exception {
 
         Strategy strategy = null;

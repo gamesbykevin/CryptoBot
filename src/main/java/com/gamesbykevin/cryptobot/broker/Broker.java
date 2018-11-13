@@ -1,12 +1,17 @@
 package com.gamesbykevin.cryptobot.broker;
 
+import com.gamesbykevin.cryptobot.calculator.Calculator;
+import com.gamesbykevin.cryptobot.strategy.Strategy;
 import com.gamesbykevin.cryptobot.trade.Trade;
-import com.gamesbykevin.cryptobot.trade.TradeHelper;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.gamesbykevin.cryptobot.broker.BrokerHelper.getTradePending;
+import static com.gamesbykevin.cryptobot.broker.BrokerHelper.purchase;
+import static com.gamesbykevin.cryptobot.broker.BrokerHelper.sell;
 
 @Data
 public class Broker {
@@ -14,81 +19,59 @@ public class Broker {
     //the amount of funds the broker has
     private BigDecimal funds;
 
-    //list of trades this broker has made
+    //list of trades tied to the broker (includes pending, cancelled, & filled)
     private List<Trade> trades;
 
     //do we stop trading?
     private boolean stop = false;
 
-    /**
-     * When purchasing stock we round the quantity to make it simple
-     */
-    public static final int ROUND_DECIMALS_QUANTITY = 2;
+    //the trading strategy this broker is usin g
+    private Strategy strategy;
 
-    /**
-     * How many decimals do we round when talking about price
-     */
-    public static final int ROUND_DECIMALS_PRICE = 2;
+    //the calculator which will contain our market data
+    private Calculator calculator;
 
     public Broker() {
+
+        //create a new list to hold our trades
         this.trades = new ArrayList<>();
     }
 
-    public void purchase(BigDecimal price) {
+    public void update() {
 
-        //create a new trade
-        Trade trade = TradeHelper.create(getFunds(), price);
+        //get the newest timestamp
+        final long before = getCalculator().getHistory().getRecent();
 
-        //deduct from our funds
-        setFunds(getFunds().subtract(price.multiply(trade.getQuantity())));
+        //update the calculator
+        getCalculator().update();
 
-        //add the trade to our list
-        getTrades().add(trade);
+        //get the newest timestamp
+        final long after = getCalculator().getHistory().getRecent();
 
-        //display info
-        System.out.println("Trade purchase: " + price + ", quantity: " + trade.getQuantity());
-        System.out.println("Funds: $" + getFunds());
-    }
+        //if the time is different we have new data
+        if (before != after) {
 
-    public void sell(BigDecimal price) {
-
-        //get our pending trade
-        Trade trade = getTradePending();
-
-        //assign the sale price
-        trade.setSold(price);
-
-        //mark trade as filled
-        trade.setStatus(Trade.Status.Filled);
-
-        //add the $ back to our funds
-        setFunds(getFunds().add(price.multiply(trade.getQuantity())));
-    }
-
-    public void cancel() {
-
-        //cancel the pending trade
-        getTradePending().setStatus(Trade.Status.Cancelled);
-    }
-
-    /**
-     * Get our pending trade, we can only have 1 pending trade at most
-     * @return The pending trade, null if none found
-     */
-    public Trade getTradePending() {
-
-        //search for our pending trade
-        for (int index = 0; index < getTrades().size(); index++) {
-
-            //get the current trade
-            Trade trade = getTrades().get(index);
-
-            //if pending we found our trade
-            if (trade.getStatus() == Trade.Status.Pending)
-                return trade;
+            //perform calculations with our data
+            getStrategy().calculate(getCalculator().getHistory().getCandles());
         }
 
-        //no pending trades found
-        return null;
+        //if there is no pending trade, let's see if we can buy
+        if (getTradePending(this) == null) {
+
+            //do we have a signal to buy?
+            if (getStrategy().hasSignalBuy()) {
+                purchase(this);
+                System.out.println("Buy");
+            }
+
+        } else {
+
+            //do we have a signal to sell our pending trade?
+            if (getStrategy().hasSignalSell()) {
+                sell(this);
+                System.out.println("Sell");
+            }
+
+        }
     }
 }

@@ -1,7 +1,5 @@
 package com.gamesbykevin.cryptobot.calculator;
 
-import com.gamesbykevin.cryptobot.broker.Broker;
-import com.gamesbykevin.cryptobot.strategy.Strategy;
 import com.gamesbykevin.cryptobot.util.GsonHelper;
 import com.gamesbykevin.cryptobot.util.JsonHelper;
 import lombok.Data;
@@ -21,32 +19,25 @@ public class CalculatorGdax extends Calculator {
     public static final int PERIOD_INDEX_CLOSE = 4;
     public static final int PERIOD_INDEX_VOLUME = 5;
 
-    //the current price of what we are trading
-    private BigDecimal price;
-
-    public CalculatorGdax() throws Exception {
-        super();
+    public CalculatorGdax(final String dataFeedUrl, final String tickerPriceUrl) throws Exception {
+        super(dataFeedUrl, tickerPriceUrl);
     }
 
     @Override
-    public void update(Broker broker) {
-
-        //get the time of the latest candle
-        final long time = getHistory().getRecent();
+    public void update() {
 
         String jsonResponse = "";
 
         //make a call to get the current stock price
-        jsonResponse = JsonHelper.getJsonResponse("https://api.gdax.com/products/LTC-USD/ticker");
+        jsonResponse = JsonHelper.getJsonResponse(getTickerPriceUrl());
 
         //store the current stock price
-        setPrice(GsonHelper.getGson().fromJson(jsonResponse, Ticker.class).price);
+        setPrice(GsonHelper.getGson().fromJson(jsonResponse, Ticker.class).getPrice());
 
         System.out.println("Current Price of LTC $" + getPrice());
 
         //get json response
-        //jsonResponse = JsonHelper.getJsonResponse("https://api.gdax.com/products/LTC-USD/candles?granularity=900");
-        jsonResponse = JsonHelper.getJsonResponse("https://api.gdax.com/products/LTC-USD/candles?granularity=60");
+        jsonResponse = JsonHelper.getJsonResponse(getDataFeedUrl());
 
         //convert to array
         double[][] data = GsonHelper.getGson().fromJson(jsonResponse, double[][].class);
@@ -62,38 +53,6 @@ public class CalculatorGdax extends Calculator {
                 data[row][PERIOD_INDEX_VOLUME],
                 (long)data[row][PERIOD_INDEX_TIME]
             );
-        }
-
-        //if new time was discovered we need to re-calculate
-        if (time != getHistory().getRecent()) {
-
-            for (int index = 0; index < getStrategies().size(); index++) {
-
-                Strategy strategy = getStrategy(index);
-
-                strategy.calculate(getHistory().getCandles());
-                strategy.display();
-
-                //if we don't have a pending trade
-                if (broker.getTradePending() == null) {
-
-                    //do we have a signal to buy?
-                    if (strategy.hasSignalBuy()) {
-                        broker.purchase(getPrice());
-                        System.out.println("Buy");
-                    }
-
-                } else {
-
-                    //do we have a signal to sell our pending trade?
-                    if (strategy.hasSignalSell()) {
-                        broker.sell(getPrice());
-                        System.out.println("Sell");
-                    }
-
-                }
-
-            }
         }
     }
 

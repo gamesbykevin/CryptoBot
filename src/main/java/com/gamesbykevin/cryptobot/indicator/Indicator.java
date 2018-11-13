@@ -19,6 +19,11 @@ public abstract class Indicator {
         SimpleMovingAverage,
     }
 
+    /**
+     * How many indicator values do we print?
+     */
+    public static final int DISPLAY_LIMIT = 5;
+
     //the indicator we are using
     private final Key key;
 
@@ -42,18 +47,21 @@ public abstract class Indicator {
         return this.values;
     }
 
-    public void display(String desc) {
+    public void display() {
 
         String tmp = "";
 
-        for (int index = getValues().size() - 1; index >= 0; index--) {
+        //display the most recent calculations
+        for (int index = getValues().size() - DISPLAY_LIMIT; index < getValues().size(); index++) {
 
+            //each value is separated by a comma
             if (tmp != null && tmp.trim().length() > 0)
                 tmp += ", ";
 
             tmp += getValues().get(index);
         }
 
-        System.out.println(desc + " " + tmp);
+        //display the key of this indicator and how many periods it was for
+        System.out.println(getKey() + " (" + getPeriods() + "): " + tmp);
     }
 }
