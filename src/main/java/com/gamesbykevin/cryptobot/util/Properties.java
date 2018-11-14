@@ -2,6 +2,8 @@ package com.gamesbykevin.cryptobot.util;
 
 import java.io.FileInputStream;
 
+import static com.gamesbykevin.cryptobot.util.Util.display;
+
 public class Properties {
 
     //object used to access our properties
@@ -27,7 +29,7 @@ public class Properties {
             if (PROPERTIES == null) {
 
                 //loading...
-                System.out.println("Loading properties: " + PROPERTY_FILE);
+                display("Loading properties: " + PROPERTY_FILE);
 
                 //create our object
                 PROPERTIES = new java.util.Properties();

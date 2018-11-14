@@ -2,6 +2,7 @@ package com.gamesbykevin.cryptobot.indicator;
 
 import com.gamesbykevin.cryptobot.candle.Candle;
 import com.gamesbykevin.cryptobot.candle.Candle.Fields;
+import com.gamesbykevin.cryptobot.util.Util;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -62,6 +63,6 @@ public abstract class Indicator {
         }
 
         //display the key of this indicator and how many periods it was for
-        System.out.println(getKey() + " (" + getPeriods() + "): " + tmp);
+        Util.display(getKey() + " (" + getPeriods() + "): " + tmp);
     }
 }

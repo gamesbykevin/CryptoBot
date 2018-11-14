@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static com.gamesbykevin.cryptobot.util.Util.display;
+
 public class JsonHelper {
 
     /**
@@ -26,7 +28,7 @@ public class JsonHelper {
         try {
 
             //display our endpoint
-            System.out.println(link);
+            //display(link);
 
             URL url = new URL(link);
             connection = (HttpURLConnection)url.openConnection();

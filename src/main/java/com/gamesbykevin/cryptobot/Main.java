@@ -1,21 +1,21 @@
 package com.gamesbykevin.cryptobot;
 
 import com.gamesbykevin.cryptobot.broker.Broker;
+import com.gamesbykevin.cryptobot.calculator.Calculator;
 import com.gamesbykevin.cryptobot.calculator.CalculatorGdax;
-import com.gamesbykevin.cryptobot.strategy.Strategy;
+import com.gamesbykevin.cryptobot.calculator.CalculatorHelper;
 import com.gamesbykevin.cryptobot.strategy.StrategyHelper;
 import com.gamesbykevin.cryptobot.util.Properties;
-import com.gamesbykevin.cryptobot.util.Util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.gamesbykevin.cryptobot.broker.BrokerHelper.ROUND_DECIMALS_PRICE;
 import static com.gamesbykevin.cryptobot.util.Properties.DATA_FEED_URL;
 import static com.gamesbykevin.cryptobot.util.Properties.STRATEGIES;
 import static com.gamesbykevin.cryptobot.util.Properties.TICKER_PRICE_URL;
+import static com.gamesbykevin.cryptobot.util.Util.display;
 
 public class Main extends Thread implements Runnable {
 
@@ -61,15 +61,16 @@ public class Main extends Thread implements Runnable {
                     broker.setFunds(share);
 
                     //assign the calculator as well
-                    broker.setCalculator(new CalculatorGdax(DATA_FEED_URL[j], TICKER_PRICE_URL[j]));
+                    broker.setCalculator(CalculatorHelper.create(DATA_FEED_URL[j], TICKER_PRICE_URL[j]));
 
                     //our broker needs a strategy in order to trade
                     broker.setStrategy(StrategyHelper.create(STRATEGIES[i]));
 
-                    System.out.println("Created broker $" + share + ", " + STRATEGIES[i] + ", " + DATA_FEED_URL[j]);
-
                     //add to our list
                     this.brokers.add(broker);
+
+                    //print to console
+                    display("Created broker $" + share + ", " + STRATEGIES[i] + ", " + DATA_FEED_URL[j]);
                 }
             }
 
@@ -81,7 +82,7 @@ public class Main extends Thread implements Runnable {
                 }
 
                 //sleep
-                System.out.println("Sleeping " + System.currentTimeMillis());
+                display("Sleeping " + System.currentTimeMillis());
                 Thread.sleep(1000L);
             }
 

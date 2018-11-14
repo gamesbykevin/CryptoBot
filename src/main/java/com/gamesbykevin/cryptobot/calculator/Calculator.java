@@ -1,7 +1,8 @@
 package com.gamesbykevin.cryptobot.calculator;
 
-import com.gamesbykevin.cryptobot.broker.Broker;
 import com.gamesbykevin.cryptobot.history.History;
+import com.gamesbykevin.cryptobot.util.GsonHelper;
+import com.gamesbykevin.cryptobot.util.JsonHelper;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -28,6 +29,24 @@ public abstract class Calculator {
         this.dataFeedUrl = dataFeedUrl;
         this.tickerPriceUrl = tickerPriceUrl;
         this.history = new History();
+    }
+
+    public Object getTickerObj(Class classObj) {
+
+        //make our rest call to get our data
+        String jsonResponse = JsonHelper.getJsonResponse(getTickerPriceUrl());
+
+        //convert from json string to object
+        return GsonHelper.getGson().fromJson(jsonResponse, classObj);
+    }
+
+    public Object getMarketDataObj(Class classObj) {
+
+        //make our rest call to get our data
+        String jsonResponse = JsonHelper.getJsonResponse(getDataFeedUrl());
+
+        //convert from json string to object
+        return GsonHelper.getGson().fromJson(jsonResponse, classObj);
     }
 
     public History getHistory() {

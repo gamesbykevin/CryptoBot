@@ -6,7 +6,8 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.io.PrintWriter;
+
+import static com.gamesbykevin.cryptobot.util.Util.display;
 
 public class Email implements Runnable {
 
@@ -56,13 +57,13 @@ public class Email implements Runnable {
             message.setText(text);
 
             //we are now sending
-            System.out.println("Sending email...");
+            display("Sending email...");
 
             //send the email
             Transport.send(message);
 
             //display we are good
-            System.out.println("Email sent...");
+            display("Email sent...");
 
         } catch (Exception e) {
 

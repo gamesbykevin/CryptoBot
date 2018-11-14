@@ -49,8 +49,6 @@ public abstract class Strategy {
 
     public void calculate(List<Candle> candles) {
 
-        System.out.println("Calculating: " + getKey());
-
         //perform calculations for each indicator
         for (int index = 0; index < getIndicators().size(); index++) {
             getIndicator(index).calculate(candles);

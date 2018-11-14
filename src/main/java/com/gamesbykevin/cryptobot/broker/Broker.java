@@ -12,6 +12,7 @@ import java.util.List;
 import static com.gamesbykevin.cryptobot.broker.BrokerHelper.getTradePending;
 import static com.gamesbykevin.cryptobot.broker.BrokerHelper.purchase;
 import static com.gamesbykevin.cryptobot.broker.BrokerHelper.sell;
+import static com.gamesbykevin.cryptobot.util.Util.display;
 
 @Data
 public class Broker {
@@ -40,16 +41,29 @@ public class Broker {
     public void update() {
 
         //get the newest timestamp
-        final long before = getCalculator().getHistory().getRecent();
+        final long beforeTime = getCalculator().getHistory().getRecent();
+
+        //get the current $ of our stock
+        final BigDecimal beforePrice = getCalculator().getPrice();
 
         //update the calculator
         getCalculator().update();
 
+        //get the price after
+        final BigDecimal afterPrice = getCalculator().getPrice();
+
+        //if the price changed display it
+        if (beforePrice == null && afterPrice != null || !beforePrice.equals(afterPrice))
+            display("Current Price $" + getCalculator().getPrice() + ", " + getCalculator().getTickerPriceUrl());
+
         //get the newest timestamp
-        final long after = getCalculator().getHistory().getRecent();
+        final long afterTime = getCalculator().getHistory().getRecent();
 
         //if the time is different we have new data
-        if (before != after) {
+        if (beforeTime != afterTime) {
+
+            //display what we are calculating
+            display("Calculating: " + getStrategy().getKey() + "(" + getCalculator().getDataFeedUrl() + ")");
 
             //perform calculations with our data
             getStrategy().calculate(getCalculator().getHistory().getCandles());
@@ -61,7 +75,6 @@ public class Broker {
             //do we have a signal to buy?
             if (getStrategy().hasSignalBuy()) {
                 purchase(this);
-                System.out.println("Buy");
             }
 
         } else {
@@ -69,7 +82,6 @@ public class Broker {
             //do we have a signal to sell our pending trade?
             if (getStrategy().hasSignalSell()) {
                 sell(this);
-                System.out.println("Sell");
             }
 
         }

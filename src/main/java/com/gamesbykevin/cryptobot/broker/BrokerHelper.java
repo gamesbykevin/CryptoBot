@@ -4,6 +4,8 @@ import com.gamesbykevin.cryptobot.trade.Trade;
 import com.gamesbykevin.cryptobot.trade.Trade.Status;
 import com.gamesbykevin.cryptobot.trade.TradeHelper;
 
+import static com.gamesbykevin.cryptobot.util.Util.display;
+
 public class BrokerHelper {
 
     /**
@@ -28,8 +30,8 @@ public class BrokerHelper {
         broker.getTrades().add(trade);
 
         //display info
-        System.out.println("Trade purchase: " + broker.getCalculator().getPrice() + ", quantity: " + trade.getQuantity());
-        System.out.println("Funds: $" + broker.getFunds());
+        display("Trade purchase: " + broker.getCalculator().getPrice() + ", quantity: " + trade.getQuantity());
+        display("Funds: $" + broker.getFunds());
     }
 
     public static void sell(Broker broker) {
