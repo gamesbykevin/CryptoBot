@@ -1,17 +1,17 @@
 package com.gamesbykevin.cryptobot.broker;
 
 import com.gamesbykevin.cryptobot.calculator.Calculator;
+import com.gamesbykevin.cryptobot.order.Order;
+import com.gamesbykevin.cryptobot.order.Order.Status;
 import com.gamesbykevin.cryptobot.strategy.Strategy;
-import com.gamesbykevin.cryptobot.trade.Trade;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
-import static com.gamesbykevin.cryptobot.broker.BrokerHelper.getTradePending;
-import static com.gamesbykevin.cryptobot.broker.BrokerHelper.purchase;
-import static com.gamesbykevin.cryptobot.broker.BrokerHelper.sell;
+import static com.gamesbykevin.cryptobot.broker.BrokerHelper.checkOrder;
+import static com.gamesbykevin.cryptobot.broker.BrokerHelper.fillOrder;
+import static com.gamesbykevin.cryptobot.order.OrderHelper.createOrderBuy;
+import static com.gamesbykevin.cryptobot.order.OrderHelper.createOrderSell;
 import static com.gamesbykevin.cryptobot.util.Util.display;
 
 @Data
@@ -20,23 +20,20 @@ public class Broker {
     //the amount of funds the broker has
     private BigDecimal funds;
 
-    //list of trades tied to the broker (includes pending, cancelled, & filled)
-    private List<Trade> trades;
+    //how much quantity do we have right now starting at 0
+    private BigDecimal quantity = BigDecimal.ZERO;
 
     //do we stop trading?
     private boolean stop = false;
 
-    //the trading strategy this broker is usin g
+    //current pending order
+    private Order order;
+
+    //the trading strategy this broker is using
     private Strategy strategy;
 
     //the calculator which will contain our market data
     private Calculator calculator;
-
-    public Broker() {
-
-        //create a new list to hold our trades
-        this.trades = new ArrayList<>();
-    }
 
     public void update() {
 
@@ -69,21 +66,48 @@ public class Broker {
             getStrategy().calculate(getCalculator().getHistory().getCandles());
         }
 
-        //if there is no pending trade, let's see if we can buy
-        if (getTradePending(this) == null) {
+        switch (getOrder().getStatus()) {
 
-            //do we have a signal to buy?
-            if (getStrategy().hasSignalBuy()) {
-                purchase(this);
-            }
+            //if the order is cancelled let's see if we can buy or sell
+            case Cancelled:
 
-        } else {
+                //if the quantity is greater than 0 let's look for an opportunity to sell
+                if (getQuantity().compareTo(BigDecimal.ZERO) > 0) {
 
-            //do we have a signal to sell our pending trade?
-            if (getStrategy().hasSignalSell()) {
-                sell(this);
-            }
+                    //if we have a signal, create the order
+                    if (getStrategy().hasSignalSell())
+                        createOrderSell(this);
 
+                } else {
+
+                    //if we have a signal, create the order
+                    if (getStrategy().hasSignalBuy())
+                        createOrderBuy(this);
+                }
+
+                break;
+
+            //if we have a pending order, check it
+            case Pending:
+                checkOrder(this);
+                break;
+
+            //if the order has been filled or partially filled let's update
+            case Filled:
+            case Partial:
+                fillOrder(this);
+                break;
         }
+
+    }
+
+    public Order getOrder() {
+
+        if (this.order == null) {
+            this.order = new Order();
+            this.order.setStatus(Status.Cancelled);
+        }
+
+        return this.order;
     }
 }

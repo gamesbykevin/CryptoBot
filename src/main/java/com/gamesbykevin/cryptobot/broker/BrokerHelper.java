@@ -1,9 +1,11 @@
 package com.gamesbykevin.cryptobot.broker;
 
-import com.gamesbykevin.cryptobot.trade.Trade;
-import com.gamesbykevin.cryptobot.trade.Trade.Status;
-import com.gamesbykevin.cryptobot.trade.TradeHelper;
+import com.gamesbykevin.cryptobot.order.Order.Status;
 
+import java.math.BigDecimal;
+
+import static com.gamesbykevin.cryptobot.order.Order.ATTEMPTS_LIMIT;
+import static com.gamesbykevin.cryptobot.util.Properties.PAPER_TRADING;
 import static com.gamesbykevin.cryptobot.util.Util.display;
 
 public class BrokerHelper {
@@ -13,66 +15,87 @@ public class BrokerHelper {
      */
     public static final int ROUND_DECIMALS_QUANTITY = 2;
 
-    /**
-     * How many decimals do we round when talking about price
-     */
-    public static final int ROUND_DECIMALS_PRICE = 2;
+    public static void checkOrder(Broker broker) {
 
-    public static void purchase(Broker broker) {
+        //if we are paper trading
+        if (PAPER_TRADING) {
 
-        //create a new trade
-        Trade trade = TradeHelper.create(broker.getFunds(), broker.getCalculator().getPrice());
+            //check if the order has filled
+            switch (broker.getOrder().getAction()) {
 
-        //deduct from our funds
-        broker.setFunds(broker.getFunds().subtract(broker.getCalculator().getPrice().multiply(trade.getQuantity())));
+                case Buy:
 
-        //add the trade to our list
-        broker.getTrades().add(trade);
+                    //if the stock price is less than our order price then our limit order has been filled
+                    if (broker.getCalculator().getPrice().compareTo(broker.getOrder().getPrice()) == -1) {
 
-        //display info
-        display("Trade purchase: " + broker.getCalculator().getPrice() + ", quantity: " + trade.getQuantity());
-        display("Funds: $" + broker.getFunds());
-    }
+                        //mark the status as filled
+                        broker.getOrder().setStatus(Status.Filled);
 
-    public static void sell(Broker broker) {
+                    } else {
 
-        //get our pending trade
-        Trade trade = getTradePending(broker);
+                        //track the number of times we checked the order
+                        broker.getOrder().setAttempts(broker.getOrder().getAttempts() + 1);
+                    }
 
-        //assign the sale price
-        trade.setSold(broker.getCalculator().getPrice());
+                    break;
 
-        //mark trade as filled
-        trade.setStatus(Trade.Status.Filled);
+                case Sell:
 
-        //add the $ back to our funds
-        broker.setFunds(broker.getFunds().add(broker.getCalculator().getPrice().multiply(trade.getQuantity())));
-    }
+                    //if the stock price is more than our order price then our limit order has been filled
+                    if (broker.getCalculator().getPrice().compareTo(broker.getOrder().getPrice()) == 1) {
 
-    public static void cancel(Broker broker) {
+                        //mark the status as filled
+                        broker.getOrder().setStatus(Status.Filled);
 
-        //cancel the pending trade
-        getTradePending(broker).setStatus(Trade.Status.Cancelled);
-    }
+                    } else {
 
-    /**
-     * Get our pending trade, we can only have 1 pending trade at most
-     * @return The pending trade, null if none found
-     */
-    public static Trade getTradePending(Broker broker) {
+                        //track the number of times we checked the order
+                        broker.getOrder().setAttempts(broker.getOrder().getAttempts() + 1);
+                    }
 
-        //search for our pending trade
-        for (int index = 0; index < broker.getTrades().size(); index++) {
-
-            //get the current trade
-            Trade trade = broker.getTrades().get(index);
-
-            //if pending we found our trade
-            if (trade.getStatus() == Status.Pending)
-                return trade;
+                    break;
+            }
         }
 
-        //no pending trades found
-        return null;
+        //cancel the order if we reached the # of attempts
+        if (broker.getOrder().getAttempts() > ATTEMPTS_LIMIT)
+            broker.getOrder().setStatus(Status.Cancelled);
+
+        //display the progress
+        display("Checking " + broker.getOrder().getAction() + " order: " + broker.getOrder().getStatus());
+    }
+
+    public static void fillOrder(Broker broker) {
+
+        //fill the order
+        switch (broker.getOrder().getAction()) {
+
+            case Buy:
+
+                //update our quantity
+                broker.setQuantity(broker.getQuantity().add(broker.getOrder().getQuantity()));
+
+                //how much did the order cost?
+                BigDecimal purchasePrice = broker.getOrder().getPrice().multiply(broker.getOrder().getQuantity());
+
+                //subtract the cost from our funds
+                broker.setFunds(broker.getFunds().subtract(purchasePrice));
+                break;
+
+            case Sell:
+
+                //update our quantity
+                broker.setQuantity(broker.getQuantity().subtract(broker.getOrder().getQuantity()));
+
+                //how much money did we end up with
+                BigDecimal sellPrice = broker.getOrder().getPrice().multiply(broker.getOrder().getQuantity());
+
+                //add the winnings to our total funds
+                broker.setFunds(broker.getFunds().add(sellPrice));
+                break;
+        }
+
+        //mark the order cancelled since we are now done
+        broker.getOrder().setStatus(Status.Cancelled);
     }
 }
