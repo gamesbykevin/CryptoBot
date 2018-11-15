@@ -15,7 +15,7 @@ public class BrokerHelper {
      */
     public static final int ROUND_DECIMALS_QUANTITY = 2;
 
-    public static void checkOrder(Broker broker) {
+    public static void checkOrder(Broker broker) throws Exception {
 
         //if we are paper trading
         if (PAPER_TRADING) {
@@ -54,6 +54,9 @@ public class BrokerHelper {
                     }
 
                     break;
+
+                default:
+                    throw new Exception("Action not found: " + broker.getOrder().getAction());
             }
         }
 
@@ -62,7 +65,7 @@ public class BrokerHelper {
             broker.getOrder().setStatus(Status.Cancelled);
 
         //display the progress
-        display("Checking " + broker.getOrder().getAction() + " order: " + broker.getOrder().getStatus());
+        display("Checking " + broker.getOrder().getAction() + " order: " + broker.getOrder().getStatus() + ", attempts = " + broker.getOrder().getAttempts());
     }
 
     public static void fillOrder(Broker broker) {

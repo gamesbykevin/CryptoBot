@@ -10,7 +10,7 @@ public class StrategyHelper {
         for (Key key : Key.values()) {
 
             //if the string matches create this strategy
-            if (key.toString().equalsIgnoreCase(strategyName))
+            if (key.toString().equalsIgnoreCase(strategyName.trim()))
                 return create(key);
         }
 
@@ -27,6 +27,10 @@ public class StrategyHelper {
 
             case Strategy_1:
                 strategy = new Strategy1();
+                break;
+
+            case Strategy_2:
+                strategy = new Strategy2();
                 break;
 
             default:

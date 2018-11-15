@@ -15,7 +15,7 @@ public class SimpleMovingAverage extends Indicator {
     }
 
     @Override
-    public void calculate(List<Candle> candles) {
+    public void calculate(List<Candle> candles) throws Exception {
 
         //clear our list
         getValues().clear();
@@ -32,34 +32,12 @@ public class SimpleMovingAverage extends Indicator {
             //check the periods to perform our calculation
             for (int j = index - getPeriods(); j < index; j++) {
 
-                //which field?
-                switch (getField()) {
-
-                    case Open:
-                        sum += candles.get(j).getOpen();
-                        break;
-
-                    case Close:
-                        sum += candles.get(j).getClose();
-                        break;
-
-                    case Low:
-                        sum += candles.get(j).getLow();
-                        break;
-
-                    case High:
-                        sum += candles.get(j).getHigh();
-                        break;
-
-                    case Volume:
-                        sum += candles.get(j).getVolume();
-                        break;
-                }
+                //add the total sum
+                sum += getValue(candles.get(j));
             }
 
             //add the value to our list
             getValues().add((sum / (double)getPeriods()));
         }
     }
-
 }

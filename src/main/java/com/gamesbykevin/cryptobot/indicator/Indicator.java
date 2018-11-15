@@ -18,6 +18,7 @@ public abstract class Indicator {
 
         //trend
         SimpleMovingAverage,
+        ExponentialMovingAverage
     }
 
     /**
@@ -38,7 +39,7 @@ public abstract class Indicator {
     private List<Double> values;
 
     //implement logic to calculate
-    public abstract void calculate(List<Candle> candles);
+    public abstract void calculate(List<Candle> candles) throws Exception;
 
     public List<Double> getValues() {
 
@@ -64,5 +65,33 @@ public abstract class Indicator {
 
         //display the key of this indicator and how many periods it was for
         Util.display(getKey() + " (" + getPeriods() + "): " + tmp);
+    }
+
+    protected double getValue(Candle candle) throws Exception {
+        return getValue(candle, getField());
+    }
+
+    protected double getValue(Candle candle, Fields field) throws Exception {
+
+        //which field?
+        switch (field) {
+
+            case Open:
+                return candle.getOpen();
+
+            case Close:
+                return candle.getClose();
+
+            case Low:
+                return candle.getLow();
+
+            case High:
+                return candle.getHigh();
+
+            case Volume:
+                return candle.getVolume();
+        }
+
+        throw new Exception("Field not mapped: " + field);
     }
 }

@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import static com.gamesbykevin.cryptobot.broker.BrokerHelper.ROUND_DECIMALS_QUANTITY;
+import static com.gamesbykevin.cryptobot.util.Util.display;
 import static com.gamesbykevin.cryptobot.util.Util.round;
 
 public class OrderHelper {
@@ -36,6 +37,9 @@ public class OrderHelper {
 
         //reset the # of attempts
         broker.getOrder().setAttempts(0);
+
+        //display order info
+        display("Order created (" + broker.getOrder().getAction() + ") $" + broker.getOrder().getPrice() + ", quantity: " + broker.getOrder().getQuantity());
     }
 
     public static void createOrderSell(Broker broker) {
@@ -54,5 +58,8 @@ public class OrderHelper {
 
         //reset the # of attempts
         broker.getOrder().setAttempts(0);
+
+        //display order info
+        display("Order created (" + broker.getOrder().getAction() + ") $" + broker.getOrder().getPrice() + ", quantity: " + broker.getOrder().getQuantity());
     }
 }

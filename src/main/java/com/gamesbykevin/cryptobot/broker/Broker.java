@@ -35,7 +35,7 @@ public class Broker {
     //the calculator which will contain our market data
     private Calculator calculator;
 
-    public void update() {
+    public void update() throws Exception {
 
         //get the newest timestamp
         final long beforeTime = getCalculator().getHistory().getRecent();

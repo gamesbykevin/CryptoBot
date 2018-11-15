@@ -19,7 +19,7 @@ public abstract class Strategy {
     public enum Key {
 
         Strategy_1,
-
+        Strategy_2,
     }
 
     //which strategy are we using
@@ -47,7 +47,7 @@ public abstract class Strategy {
         return getIndicators().get(index);
     }
 
-    public void calculate(List<Candle> candles) {
+    public void calculate(List<Candle> candles) throws Exception {
 
         //perform calculations for each indicator
         for (int index = 0; index < getIndicators().size(); index++) {
