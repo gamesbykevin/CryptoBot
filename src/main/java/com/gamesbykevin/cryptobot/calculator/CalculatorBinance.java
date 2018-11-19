@@ -4,8 +4,6 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
-import static com.gamesbykevin.cryptobot.util.Util.display;
-
 public final class CalculatorBinance extends Calculator {
 
     /**

@@ -5,6 +5,7 @@ import com.gamesbykevin.cryptobot.order.Order;
 import com.gamesbykevin.cryptobot.order.Order.Status;
 import com.gamesbykevin.cryptobot.strategy.Strategy;
 import lombok.Data;
+import lombok.extern.log4j.Log4j;
 
 import java.math.BigDecimal;
 
@@ -12,9 +13,9 @@ import static com.gamesbykevin.cryptobot.broker.BrokerHelper.checkOrder;
 import static com.gamesbykevin.cryptobot.broker.BrokerHelper.fillOrder;
 import static com.gamesbykevin.cryptobot.order.OrderHelper.createOrderBuy;
 import static com.gamesbykevin.cryptobot.order.OrderHelper.createOrderSell;
-import static com.gamesbykevin.cryptobot.util.Util.display;
 
 @Data
+@Log4j
 public class Broker {
 
     //the amount of funds the broker has
@@ -35,6 +36,9 @@ public class Broker {
     //the calculator which will contain our market data
     private Calculator calculator;
 
+    //each broker will have a name
+    private String name;
+
     public void update() throws Exception {
 
         //get the newest timestamp
@@ -51,7 +55,7 @@ public class Broker {
 
         //if the price changed display it
         if (beforePrice == null && afterPrice != null || !beforePrice.equals(afterPrice))
-            display("Current Price $" + getCalculator().getPrice() + ", " + getCalculator().getTickerPriceUrl());
+            log.info("Key: " + getStrategy().getKey() + ", Current Price $" + getCalculator().getPrice() + ", Quantity: " + getQuantity() + ", " + getCalculator().getDataFeedUrl());
 
         //get the newest timestamp
         final long afterTime = getCalculator().getHistory().getRecent();
@@ -60,7 +64,7 @@ public class Broker {
         if (beforeTime != afterTime) {
 
             //display what we are calculating
-            display("Calculating: " + getStrategy().getKey() + "(" + getCalculator().getDataFeedUrl() + ")");
+            log.info("Calculating: " + getStrategy().getKey() + "(" + getCalculator().getDataFeedUrl() + ")");
 
             //perform calculations with our data
             getStrategy().calculate(getCalculator().getHistory().getCandles());
@@ -98,7 +102,6 @@ public class Broker {
                 fillOrder(this);
                 break;
         }
-
     }
 
     public Order getOrder() {

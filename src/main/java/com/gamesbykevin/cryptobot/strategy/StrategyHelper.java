@@ -33,8 +33,12 @@ public class StrategyHelper {
                 strategy = new Strategy2();
                 break;
 
+            case Strategy_3:
+                strategy = new Strategy3();
+                break;
+
             default:
-                throw new Exception();
+                throw new Exception("Strategy not mapped: " + key);
         }
 
         //return our strategy

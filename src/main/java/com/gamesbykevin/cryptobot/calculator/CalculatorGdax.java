@@ -4,8 +4,6 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
-import static com.gamesbykevin.cryptobot.util.Util.display;
-
 @Data
 public final class CalculatorGdax extends Calculator {
 

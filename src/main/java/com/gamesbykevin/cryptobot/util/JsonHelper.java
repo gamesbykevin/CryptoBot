@@ -1,12 +1,13 @@
 package com.gamesbykevin.cryptobot.util;
 
+import lombok.extern.log4j.Log4j;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static com.gamesbykevin.cryptobot.util.Util.display;
-
+@Log4j
 public class JsonHelper {
 
     /**
@@ -28,7 +29,7 @@ public class JsonHelper {
         try {
 
             //display our endpoint
-            //display(link);
+            log.info(link);
 
             URL url = new URL(link);
             connection = (HttpURLConnection)url.openConnection();
@@ -55,7 +56,7 @@ public class JsonHelper {
             br = null;
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
 
             if (connection != null) {
@@ -64,7 +65,7 @@ public class JsonHelper {
                     //after we are done, let's disconnect
                     connection.disconnect();
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    log.error(ex.getMessage(), ex);
                 }
 
             }

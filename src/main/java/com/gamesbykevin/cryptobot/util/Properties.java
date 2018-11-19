@@ -1,9 +1,10 @@
 package com.gamesbykevin.cryptobot.util;
 
+import lombok.extern.log4j.Log4j;
+
 import java.io.FileInputStream;
 
-import static com.gamesbykevin.cryptobot.util.Util.display;
-
+@Log4j
 public class Properties {
 
     //object used to access our properties
@@ -29,7 +30,7 @@ public class Properties {
             if (PROPERTIES == null) {
 
                 //loading...
-                display("Loading properties: " + PROPERTY_FILE);
+                log.info("Loading properties: " + PROPERTY_FILE);
 
                 //create our object
                 PROPERTIES = new java.util.Properties();
@@ -53,7 +54,7 @@ public class Properties {
         } catch (Exception ex) {
 
             //display error
-            ex.printStackTrace();
+            log.error(ex.getMessage(), ex);
 
             //exit with error
             System.exit(1);

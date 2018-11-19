@@ -1,22 +1,22 @@
 package com.gamesbykevin.cryptobot;
 
 import com.gamesbykevin.cryptobot.broker.Broker;
-import com.gamesbykevin.cryptobot.calculator.Calculator;
-import com.gamesbykevin.cryptobot.calculator.CalculatorGdax;
 import com.gamesbykevin.cryptobot.calculator.CalculatorHelper;
 import com.gamesbykevin.cryptobot.strategy.StrategyHelper;
 import com.gamesbykevin.cryptobot.util.Properties;
+import lombok.extern.log4j.Log4j;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.gamesbykevin.cryptobot.util.Properties.DATA_FEED_URL;
-import static com.gamesbykevin.cryptobot.util.Properties.STRATEGIES;
-import static com.gamesbykevin.cryptobot.util.Properties.TICKER_PRICE_URL;
-import static com.gamesbykevin.cryptobot.util.Util.display;
+import static com.gamesbykevin.cryptobot.broker.BrokerHelper.getBrokersDetails;
+import static com.gamesbykevin.cryptobot.util.Email.EMAIL_NOTIFICATION_DELAY;
+import static com.gamesbykevin.cryptobot.util.Email.send;
+import static com.gamesbykevin.cryptobot.util.Properties.*;
 
+@Log4j
 public class Main extends Thread implements Runnable {
 
     public static void main(String[] args) {
@@ -25,6 +25,11 @@ public class Main extends Thread implements Runnable {
         Main main = new Main();
         main.start();
     }
+
+    /**
+     * How long do we sleep in between each broker update
+     */
+    public static final long SLEEP = Long.parseLong(getProperty("sleep"));
 
     //list of brokers trading stock
     private List<Broker> brokers;
@@ -48,7 +53,7 @@ public class Main extends Thread implements Runnable {
             BigDecimal total = BigDecimal.valueOf(DATA_FEED_URL.length * STRATEGIES.length);
 
             //each broker will get an equal share of the total funds
-            BigDecimal share = new BigDecimal(Properties.getProperty("funds")).divide(total, RoundingMode.HALF_DOWN);
+            BigDecimal share = new BigDecimal(getProperty("funds")).divide(total, RoundingMode.DOWN);
 
             //we will create a broker for every strategy and data feed combination
             for (int i = 0; i < STRATEGIES.length; i++) {
@@ -56,6 +61,9 @@ public class Main extends Thread implements Runnable {
 
                     //create a new broker
                     Broker broker = new Broker();
+
+                    //each broker will have a unique name
+                    broker.setName("Broker " + this.brokers.size());
 
                     //assign their share of the funds
                     broker.setFunds(share);
@@ -70,24 +78,51 @@ public class Main extends Thread implements Runnable {
                     this.brokers.add(broker);
 
                     //print to console
-                    display("Created broker $" + share + ", " + STRATEGIES[i] + ", " + DATA_FEED_URL[j]);
+                    log.info("Created broker $" + share + ", " + STRATEGIES[i] + ", " + DATA_FEED_URL[j]);
                 }
             }
+
+            long time = System.currentTimeMillis();
 
             while (true) {
 
-                //update the brokers
-                for (int index = 0; index < this.brokers.size(); index++) {
-                    this.brokers.get(index).update();
+                try {
+
+                    //update the brokers
+                    for (int index = 0; index < this.brokers.size(); index++) {
+
+                        //update the current broker
+                        this.brokers.get(index).update();
+
+                        //sleep
+                        Thread.sleep(SLEEP);
+                    }
+
+                    if (System.currentTimeMillis() - time >= EMAIL_NOTIFICATION_DELAY) {
+
+                        send("CryptoBot Update", getBrokersDetails(this.brokers));
+                        time = System.currentTimeMillis();
+
+                    } else {
+
+                        long seconds = (EMAIL_NOTIFICATION_DELAY - (System.currentTimeMillis() - time)) / 1000;
+                        log.info("Next update in " + seconds + " seconds");
+                        //display("Next update in " + seconds + " seconds");
+                    }
+
+                } catch (Exception ex) {
+
+                    //print error trace
+                    log.error(ex.getMessage(), ex);
+
+                    //sleep thread again if there was an exception
+                    Thread.sleep(SLEEP);
                 }
 
-                //sleep
-                display("Sleeping " + System.currentTimeMillis());
-                Thread.sleep(1000L);
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 }

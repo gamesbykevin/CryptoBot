@@ -52,4 +52,24 @@ public class ExponentialMovingAverage extends Indicator {
             }
         }
     }
+
+    public static double calculate(List<Double> values, int start, int end) {
+
+        return 0;
+
+        /*
+        double prevEma = 0;
+
+        for (int index = start; index <= end; index++) {
+
+            if (index == start) {
+
+                prevEma;
+
+            } else {
+
+            }
+        }
+        */
+    }
 }

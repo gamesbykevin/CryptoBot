@@ -3,14 +3,15 @@ package com.gamesbykevin.cryptobot.order;
 import com.gamesbykevin.cryptobot.broker.Broker;
 import com.gamesbykevin.cryptobot.order.Order.Action;
 import com.gamesbykevin.cryptobot.order.Order.Status;
+import lombok.extern.log4j.Log4j;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import static com.gamesbykevin.cryptobot.broker.BrokerHelper.ROUND_DECIMALS_QUANTITY;
-import static com.gamesbykevin.cryptobot.util.Util.display;
+import static com.gamesbykevin.cryptobot.util.Util.ROUND_DECIMALS_QUANTITY;
 import static com.gamesbykevin.cryptobot.util.Util.round;
 
+@Log4j
 public class OrderHelper {
 
     /**
@@ -24,10 +25,10 @@ public class OrderHelper {
         broker.getOrder().setAction(Action.Buy);
 
         //we will subtract a penny from the current price
-        broker.getOrder().setPrice(broker.getCalculator().getPrice().subtract(PENNY));
+        broker.getOrder().setPrice(round(ROUND_DECIMALS_QUANTITY, broker.getCalculator().getPrice().subtract(PENNY)));
 
         //determine how much quantity we can buy
-        BigDecimal quantity = broker.getFunds().divide(broker.getOrder().getPrice(), RoundingMode.HALF_DOWN);
+        BigDecimal quantity = broker.getFunds().divide(broker.getOrder().getPrice(), RoundingMode.DOWN);
 
         //round our quantity to a nice number
         broker.getOrder().setQuantity(round(ROUND_DECIMALS_QUANTITY, quantity));
@@ -39,7 +40,7 @@ public class OrderHelper {
         broker.getOrder().setAttempts(0);
 
         //display order info
-        display("Order created (" + broker.getOrder().getAction() + ") $" + broker.getOrder().getPrice() + ", quantity: " + broker.getOrder().getQuantity());
+        log.info(getOrderDesc(broker.getOrder()));
     }
 
     public static void createOrderSell(Broker broker) {
@@ -60,6 +61,10 @@ public class OrderHelper {
         broker.getOrder().setAttempts(0);
 
         //display order info
-        display("Order created (" + broker.getOrder().getAction() + ") $" + broker.getOrder().getPrice() + ", quantity: " + broker.getOrder().getQuantity());
+        log.info(getOrderDesc(broker.getOrder()));
+    }
+
+    public static String getOrderDesc(Order order) {
+         return "Order (" + order.getAction() + ") $" + order.getPrice() + ", quantity: " + order.getQuantity();
     }
 }

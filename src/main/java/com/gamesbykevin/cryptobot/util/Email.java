@@ -1,5 +1,7 @@
 package com.gamesbykevin.cryptobot.util;
 
+import lombok.extern.log4j.Log4j;
+
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -7,14 +9,18 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import static com.gamesbykevin.cryptobot.util.Util.display;
-
+@Log4j
 public class Email implements Runnable {
 
     /**
      * How we will notify
      */
     private static final String EMAIL_NOTIFICATION_ADDRESS = Properties.getProperty("emailNotification");
+
+    /**
+     * How often do we send an email notification (in milliseconds)
+     */
+    public static final long EMAIL_NOTIFICATION_DELAY = Integer.parseInt(Properties.getProperty("emailNotificationDelay")) * 60000;
 
     /**
      * Credentials to send email
@@ -57,18 +63,20 @@ public class Email implements Runnable {
             message.setText(text);
 
             //we are now sending
-            display("Sending email...");
+            log.info("Sending email...");
+            log.info(subject);
+            log.info(text);
 
             //send the email
             Transport.send(message);
 
             //display we are good
-            display("Email sent...");
+            log.info("Email sent...");
 
         } catch (Exception e) {
 
             //print and write error to log
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
 
         } finally {
 

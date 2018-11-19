@@ -20,6 +20,7 @@ public abstract class Strategy {
 
         Strategy_1,
         Strategy_2,
+        Strategy_3
     }
 
     //which strategy are we using

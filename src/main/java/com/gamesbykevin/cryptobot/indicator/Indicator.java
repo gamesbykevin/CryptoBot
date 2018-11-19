@@ -2,13 +2,14 @@ package com.gamesbykevin.cryptobot.indicator;
 
 import com.gamesbykevin.cryptobot.candle.Candle;
 import com.gamesbykevin.cryptobot.candle.Candle.Fields;
-import com.gamesbykevin.cryptobot.util.Util;
 import lombok.Data;
+import lombok.extern.log4j.Log4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Log4j
 public abstract class Indicator {
 
     /**
@@ -18,7 +19,10 @@ public abstract class Indicator {
 
         //trend
         SimpleMovingAverage,
-        ExponentialMovingAverage
+        ExponentialMovingAverage,
+
+        //momentum
+        CommodityChannelIndex,
     }
 
     /**
@@ -64,7 +68,7 @@ public abstract class Indicator {
         }
 
         //display the key of this indicator and how many periods it was for
-        Util.display(getKey() + " (" + getPeriods() + "): " + tmp);
+        log.info(getKey() + " (" + getPeriods() + "): " + tmp);
     }
 
     protected double getValue(Candle candle) throws Exception {

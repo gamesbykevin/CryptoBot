@@ -1,19 +1,18 @@
 package com.gamesbykevin.cryptobot.broker;
 
 import com.gamesbykevin.cryptobot.order.Order.Status;
+import lombok.extern.log4j.Log4j;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static com.gamesbykevin.cryptobot.order.Order.ATTEMPTS_LIMIT;
+import static com.gamesbykevin.cryptobot.order.OrderHelper.getOrderDesc;
 import static com.gamesbykevin.cryptobot.util.Properties.PAPER_TRADING;
-import static com.gamesbykevin.cryptobot.util.Util.display;
+import static com.gamesbykevin.cryptobot.util.Util.NEW_LINE;
 
+@Log4j
 public class BrokerHelper {
-
-    /**
-     * When purchasing stock we round the quantity to make it simple
-     */
-    public static final int ROUND_DECIMALS_QUANTITY = 2;
 
     public static void checkOrder(Broker broker) throws Exception {
 
@@ -58,14 +57,17 @@ public class BrokerHelper {
                 default:
                     throw new Exception("Action not found: " + broker.getOrder().getAction());
             }
+        } else {
+            throw new Exception("Haven't implemented this yet");
         }
 
-        //cancel the order if we reached the # of attempts
-        if (broker.getOrder().getAttempts() > ATTEMPTS_LIMIT)
+        //cancel the order if we reached the # of attempts and it's still pending
+        if (broker.getOrder().getAttempts() > ATTEMPTS_LIMIT && broker.getOrder().getStatus() == Status.Pending)
             broker.getOrder().setStatus(Status.Cancelled);
 
         //display the progress
-        display("Checking " + broker.getOrder().getAction() + " order: " + broker.getOrder().getStatus() + ", attempts = " + broker.getOrder().getAttempts());
+        log.info("Checking order: " + broker.getOrder().getStatus() + ", attempts = " + broker.getOrder().getAttempts());
+        log.info(getOrderDesc(broker.getOrder()));
     }
 
     public static void fillOrder(Broker broker) {
@@ -100,5 +102,23 @@ public class BrokerHelper {
 
         //mark the order cancelled since we are now done
         broker.getOrder().setStatus(Status.Cancelled);
+    }
+
+    public static String getBrokersDetails(List<Broker> brokers) {
+
+        String desc = "";
+
+        for (int index = 0; index < brokers.size(); index++) {
+
+            Broker broker = brokers.get(index);
+
+            //if we sold our stock at the current price, how much funds would we have?
+            BigDecimal funds = broker.getFunds().add(broker.getQuantity().multiply(broker.getCalculator().getPrice()));
+
+            desc += broker.getName() + " " + broker.getStrategy().getKey() + ", Available $" + broker.getFunds() + ", quantity: "  + broker.getQuantity() + ", Total Value $" + funds + ", " + broker.getCalculator().getDataFeedUrl();
+            desc += NEW_LINE;
+        }
+
+        return desc;
     }
 }
