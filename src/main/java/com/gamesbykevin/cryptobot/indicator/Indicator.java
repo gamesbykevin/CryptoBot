@@ -23,6 +23,11 @@ public abstract class Indicator {
 
         //momentum
         CommodityChannelIndex,
+        OnBalanceVolume,
+
+        //volume
+        NegativeVolumeIndex,
+        PositiveVolumeIndex
     }
 
     /**

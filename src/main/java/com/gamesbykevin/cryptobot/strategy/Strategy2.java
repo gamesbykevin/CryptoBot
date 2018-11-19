@@ -36,7 +36,7 @@ public final class Strategy2 extends Strategy {
         double emaLongPrevious = getRecent(emaLong.getValues(), 2);
 
         //if we just crossed above the long ema, we have a signal
-        if (emaShortCurrent > emaLongCurrent)// && emaShortPrevious < emaLongPrevious)
+        if (emaShortCurrent > emaLongCurrent && emaShortPrevious < emaLongPrevious)
             return true;
 
         return false;

@@ -44,32 +44,18 @@ public class ExponentialMovingAverage extends Indicator {
                 //get the previous ema
                 final double previousEma = getValues().get(getValues().size() - 1);
 
-                //calculate the new ema
-                double ema = (getValue(candles.get(index)) - previousEma) * (2d / (double)(getPeriods() + 1)) + previousEma;
-
-                //add the new ema to our list
-                getValues().add(ema);
+                //calculate and add the new ema to our list
+                getValues().add(calculate(getValue(candles.get(index)), getPeriods(), previousEma));
             }
         }
     }
 
-    public static double calculate(List<Double> values, int start, int end) {
+    public static double calculate(double value, int periods, double previousEma) {
 
-        return 0;
+        //calculate the multiplier
+        double multiplier = (2d / (periods + 1d));
 
-        /*
-        double prevEma = 0;
-
-        for (int index = start; index <= end; index++) {
-
-            if (index == start) {
-
-                prevEma;
-
-            } else {
-
-            }
-        }
-        */
+        //return the result
+        return ((value - previousEma) * multiplier) + previousEma;
     }
 }

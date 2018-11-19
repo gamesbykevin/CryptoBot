@@ -36,7 +36,7 @@ public final class Strategy1 extends Strategy {
         double smaLongPrevious = getRecent(smaLong.getValues(), 2);
 
         //if we just crossed above the long sma, we have a signal
-        if (smaShortCurrent > smaLongCurrent)// && smaShortPrevious < smaLongPrevious)
+        if (smaShortCurrent > smaLongCurrent && smaShortPrevious < smaLongPrevious)
             return true;
 
         return false;
