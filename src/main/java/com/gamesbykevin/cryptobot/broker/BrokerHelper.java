@@ -8,6 +8,7 @@ import java.util.List;
 
 import static com.gamesbykevin.cryptobot.order.Order.ATTEMPTS_LIMIT;
 import static com.gamesbykevin.cryptobot.order.OrderHelper.getOrderDesc;
+import static com.gamesbykevin.cryptobot.util.Properties.LIMIT_ORDERS;
 import static com.gamesbykevin.cryptobot.util.Properties.PAPER_TRADING;
 import static com.gamesbykevin.cryptobot.util.Util.NEW_LINE;
 
@@ -19,45 +20,63 @@ public class BrokerHelper {
         //if we are paper trading
         if (PAPER_TRADING) {
 
-            //check if the order has filled
-            switch (broker.getOrder().getAction()) {
+            if (!LIMIT_ORDERS) {
 
-                case Buy:
+                //if we are submitting market orders assume they are immediately filled
+                broker.getOrder().setStatus(Status.Filled);
 
-                    //if the stock price is less than our order price then our limit order has been filled
-                    if (broker.getCalculator().getPrice().compareTo(broker.getOrder().getPrice()) == -1) {
+            } else {
 
-                        //mark the status as filled
-                        broker.getOrder().setStatus(Status.Filled);
+                //check if the order has filled
+                switch (broker.getOrder().getAction()) {
 
-                    } else {
+                    case Buy:
 
-                        //track the number of times we checked the order
-                        broker.getOrder().setAttempts(broker.getOrder().getAttempts() + 1);
-                    }
+                        //if the stock price is less than our order price then our limit order has been filled
+                        if (broker.getCalculator().getPrice().compareTo(broker.getOrder().getPrice()) == -1) {
 
-                    break;
+                            //mark the status as filled
+                            broker.getOrder().setStatus(Status.Filled);
 
-                case Sell:
+                        } else {
 
-                    //if the stock price is more than our order price then our limit order has been filled
-                    if (broker.getCalculator().getPrice().compareTo(broker.getOrder().getPrice()) == 1) {
+                            //track the number of times we checked the order
+                            broker.getOrder().setAttempts(broker.getOrder().getAttempts() + 1);
+                        }
 
-                        //mark the status as filled
-                        broker.getOrder().setStatus(Status.Filled);
+                        break;
 
-                    } else {
+                    case Sell:
 
-                        //track the number of times we checked the order
-                        broker.getOrder().setAttempts(broker.getOrder().getAttempts() + 1);
-                    }
+                        //if the stock price is more than our order price then our limit order has been filled
+                        if (broker.getCalculator().getPrice().compareTo(broker.getOrder().getPrice()) == 1) {
 
-                    break;
+                            //mark the status as filled
+                            broker.getOrder().setStatus(Status.Filled);
 
-                default:
-                    throw new Exception("Action not found: " + broker.getOrder().getAction());
+                        } else {
+
+                            //track the number of times we checked the order
+                            broker.getOrder().setAttempts(broker.getOrder().getAttempts() + 1);
+                        }
+
+                        break;
+
+                    default:
+                        throw new Exception("Action not found: " + broker.getOrder().getAction());
+                }
             }
         } else {
+
+            if (!LIMIT_ORDERS) {
+
+                //create market order
+
+            } else {
+
+                //create limit order
+            }
+
             throw new Exception("Haven't implemented this yet");
         }
 

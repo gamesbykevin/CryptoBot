@@ -22,7 +22,7 @@ public class CommodityChannelIndex extends Indicator {
     }
 
     @Override
-    public void calculate(List<Candle> candles) throws Exception {
+    public void calculate(List<Candle> candles) {
 
         //clear our list of values
         getTypicalPrice().clear();
@@ -64,7 +64,7 @@ public class CommodityChannelIndex extends Indicator {
         }
     }
 
-    private double calculateTypicalPrice(Candle candle) throws Exception {
+    private double calculateTypicalPrice(Candle candle) {
         return ((candle.getHigh() + candle.getLow() + candle.getClose()) / 3.0d);
     }
 

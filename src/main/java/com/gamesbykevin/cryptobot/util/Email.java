@@ -15,7 +15,7 @@ public class Email implements Runnable {
     /**
      * How we will notify
      */
-    private static final String EMAIL_NOTIFICATION_ADDRESS = Properties.getProperty("emailNotification");
+    public static final String EMAIL_NOTIFICATION_ADDRESS = Properties.getProperty("emailNotification");
 
     /**
      * How often do we send an email notification (in milliseconds)

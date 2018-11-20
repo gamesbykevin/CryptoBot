@@ -1,9 +1,9 @@
-package com.gamesbykevin.cryptobot;
+package com.gamesbykevin.cryptobot.broker;
 
-import com.gamesbykevin.cryptobot.broker.Broker;
 import com.gamesbykevin.cryptobot.calculator.CalculatorHelper;
 import com.gamesbykevin.cryptobot.strategy.StrategyHelper;
 import com.gamesbykevin.cryptobot.util.Properties;
+import lombok.Data;
 import lombok.extern.log4j.Log4j;
 
 import java.math.BigDecimal;
@@ -17,24 +17,23 @@ import static com.gamesbykevin.cryptobot.util.Email.send;
 import static com.gamesbykevin.cryptobot.util.Properties.*;
 
 @Log4j
-public class Main extends Thread implements Runnable {
-
-    public static void main(String[] args) {
-
-	    // write your code here
-        Main main = new Main();
-        main.start();
-    }
+@Data
+public class BrokerManager extends Thread implements Runnable {
 
     /**
      * How long do we sleep in between each broker update
      */
     public static final long SLEEP = Long.parseLong(getProperty("sleep"));
 
+    /**
+     * How much total $ do we have to start
+     */
+    public static final BigDecimal FUNDS = new BigDecimal(getProperty("funds"));
+
     //list of brokers trading stock
     private List<Broker> brokers;
 
-    public Main() {
+    public BrokerManager() {
 
         //create new list of brokers
         this.brokers = new ArrayList<>();
@@ -53,7 +52,7 @@ public class Main extends Thread implements Runnable {
             BigDecimal total = BigDecimal.valueOf(DATA_FEED_URL.length * STRATEGIES.length);
 
             //each broker will get an equal share of the total funds
-            BigDecimal share = new BigDecimal(getProperty("funds")).divide(total, RoundingMode.DOWN);
+            BigDecimal share = FUNDS.divide(total, RoundingMode.DOWN);
 
             //we will create a broker for every strategy and data feed combination
             for (int i = 0; i < STRATEGIES.length; i++) {

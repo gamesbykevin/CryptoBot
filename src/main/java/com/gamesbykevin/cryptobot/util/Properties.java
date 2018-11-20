@@ -4,6 +4,11 @@ import lombok.extern.log4j.Log4j;
 
 import java.io.FileInputStream;
 
+import static com.gamesbykevin.cryptobot.broker.BrokerManager.FUNDS;
+import static com.gamesbykevin.cryptobot.broker.BrokerManager.SLEEP;
+import static com.gamesbykevin.cryptobot.order.Order.ATTEMPTS_LIMIT;
+import static com.gamesbykevin.cryptobot.util.Email.EMAIL_NOTIFICATION_ADDRESS;
+
 @Log4j
 public class Properties {
 
@@ -17,6 +22,11 @@ public class Properties {
      * Are we paper trading? (aka not using real money)
      */
     public static final boolean PAPER_TRADING = Boolean.parseBoolean(getProperty("paperTrading"));
+
+    /**
+     * Are we submitting limit orders or market orders?
+     */
+    public static final boolean LIMIT_ORDERS = Boolean.parseBoolean(getProperty("limitOrders"));
 
     public static final String[] STRATEGIES = getProperty("strategies").split(",");
     public static final String[] DATA_FEED_URL = getProperty("dataFeedUrl").split(",");
@@ -61,5 +71,16 @@ public class Properties {
         }
 
         return null;
+    }
+
+    public static void display() {
+
+        //now that we just loaded the properties print values
+        log.info("Thread sleep: " + SLEEP);
+        log.info("Funds $" + FUNDS);
+        log.info("Paper trading: " + PAPER_TRADING);
+        log.info("Limit orders: " + LIMIT_ORDERS);
+        log.info("Check order status attempts: " + ATTEMPTS_LIMIT);
+        log.info("Email notification: " + EMAIL_NOTIFICATION_ADDRESS);
     }
 }

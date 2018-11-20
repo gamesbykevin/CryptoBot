@@ -17,6 +17,8 @@ public abstract class Indicator {
      */
     public enum Key {
 
+        MovingAverageConvergenceDivergence,
+
         //trend
         SimpleMovingAverage,
         ExponentialMovingAverage,
@@ -24,8 +26,10 @@ public abstract class Indicator {
         //momentum
         CommodityChannelIndex,
         OnBalanceVolume,
+        RelativeStrengthIndex,
 
         //volume
+        AccumulationDistributionLine,
         NegativeVolumeIndex,
         PositiveVolumeIndex
     }
