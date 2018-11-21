@@ -1,9 +1,8 @@
-package com.gamesbykevin.cryptobot.indicator;
+package com.gamesbykevin.cryptobot.indicator.trend;
 
 import com.gamesbykevin.cryptobot.candle.Candle;
 import com.gamesbykevin.cryptobot.candle.Candle.Fields;
-import com.gamesbykevin.cryptobot.indicator.trend.ExponentialMovingAverage;
-import com.gamesbykevin.cryptobot.indicator.trend.SimpleMovingAverage;
+import com.gamesbykevin.cryptobot.indicator.Indicator;
 
 import java.util.ArrayList;
 import java.util.List;

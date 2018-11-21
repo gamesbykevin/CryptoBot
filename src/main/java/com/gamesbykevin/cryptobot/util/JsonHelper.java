@@ -28,9 +28,6 @@ public class JsonHelper {
 
         try {
 
-            //display our endpoint
-            log.info(link);
-
             URL url = new URL(link);
             connection = (HttpURLConnection)url.openConnection();
 
@@ -56,7 +53,12 @@ public class JsonHelper {
             br = null;
 
         } catch (Exception e) {
+
+            //display our endpoint that was giving us problems
+            log.info(link);
+
             log.error(e.getMessage(), e);
+
         } finally {
 
             if (connection != null) {
@@ -75,5 +77,4 @@ public class JsonHelper {
 
         return result;
     }
-
 }

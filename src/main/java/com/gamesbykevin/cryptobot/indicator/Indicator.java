@@ -27,9 +27,11 @@ public abstract class Indicator {
         CommodityChannelIndex,
         OnBalanceVolume,
         RelativeStrengthIndex,
+        StochasticOscillator,
 
         //volume
         AccumulationDistributionLine,
+        MoneyFlowIndex,
         NegativeVolumeIndex,
         PositiveVolumeIndex
     }

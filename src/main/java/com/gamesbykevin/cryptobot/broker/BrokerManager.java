@@ -85,39 +85,34 @@ public class BrokerManager extends Thread implements Runnable {
 
             while (true) {
 
-                try {
+                //update the brokers
+                for (int index = 0; index < this.brokers.size(); index++) {
 
-                    //update the brokers
-                    for (int index = 0; index < this.brokers.size(); index++) {
+                    try {
 
                         //update the current broker
                         this.brokers.get(index).update();
 
-                        //sleep
-                        Thread.sleep(SLEEP);
+                    } catch (Exception ex) {
+
+                        //print error trace
+                        log.error(ex.getMessage(), ex);
                     }
 
-                    if (System.currentTimeMillis() - time >= EMAIL_NOTIFICATION_DELAY) {
-
-                        send("CryptoBot Update", getBrokersDetails(this.brokers));
-                        time = System.currentTimeMillis();
-
-                    } else {
-
-                        long seconds = (EMAIL_NOTIFICATION_DELAY - (System.currentTimeMillis() - time)) / 1000;
-                        log.info("Next update in " + seconds + " seconds");
-                        //display("Next update in " + seconds + " seconds");
-                    }
-
-                } catch (Exception ex) {
-
-                    //print error trace
-                    log.error(ex.getMessage(), ex);
-
-                    //sleep thread again if there was an exception
+                    //sleep
                     Thread.sleep(SLEEP);
                 }
 
+                if (System.currentTimeMillis() - time >= EMAIL_NOTIFICATION_DELAY) {
+
+                    send("CryptoBot Update", getBrokersDetails(this.brokers));
+                    time = System.currentTimeMillis();
+
+                } else {
+
+                    long seconds = (EMAIL_NOTIFICATION_DELAY - (System.currentTimeMillis() - time)) / 1000;
+                    log.info("Next update in " + seconds + " seconds");
+                }
             }
 
         } catch (Exception e) {

@@ -1,6 +1,6 @@
 package com.gamesbykevin.cryptobot.strategy;
 
-import com.gamesbykevin.cryptobot.indicator.MovingAverageConvergenceDivergence;
+import com.gamesbykevin.cryptobot.indicator.trend.MovingAverageConvergenceDivergence;
 
 public class Strategy5 extends Strategy {
 

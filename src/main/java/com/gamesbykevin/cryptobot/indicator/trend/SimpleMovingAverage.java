@@ -20,16 +20,16 @@ public class SimpleMovingAverage extends Indicator {
         getValues().clear();
 
         //look at the history in order to calculate our values
-        for (int index = 0; index <= candles.size(); index++) {
+        for (int index = 0; index < candles.size(); index++) {
 
             //make sure we have enough data first
-            if (index < getPeriods())
+            if (index < getPeriods() - 1)
                 continue;
 
             double sum = 0;
 
             //check the periods to perform our calculation
-            for (int j = index - getPeriods(); j < index; j++) {
+            for (int j = index - getPeriods() + 1; j <= index; j++) {
 
                 //add the total sum
                 sum += getValue(candles.get(j));

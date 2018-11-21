@@ -39,6 +39,9 @@ public class Broker {
     //each broker will have a name
     private String name;
 
+    //if something changed set dirty flag
+    private boolean dirty = true;
+
     public void update() throws Exception {
 
         //get the newest timestamp
@@ -53,9 +56,19 @@ public class Broker {
         //get the price after
         final BigDecimal afterPrice = getCalculator().getPrice();
 
-        //if the price changed display it
-        if (beforePrice == null && afterPrice != null || !beforePrice.equals(afterPrice))
+        //if the price changed set our dirty flag
+        if (!isDirty() && (beforePrice == null && afterPrice != null || beforePrice.compareTo(afterPrice) != 0))
+            setDirty(true);
+
+        //if flag is set display new information
+        if (isDirty()) {
+
+            //print broker information
             log.info("Key: " + getStrategy().getKey() + ", Current Price $" + getCalculator().getPrice() + ", Quantity: " + getQuantity() + ", " + getCalculator().getDataFeedUrl());
+
+            //turn dirty flag off
+            setDirty(false);
+        }
 
         //get the newest timestamp
         final long afterTime = getCalculator().getHistory().getRecent();

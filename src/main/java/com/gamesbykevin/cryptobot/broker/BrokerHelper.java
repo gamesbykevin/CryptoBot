@@ -119,6 +119,9 @@ public class BrokerHelper {
                 break;
         }
 
+        //flag dirty so we display new information
+        broker.setDirty(true);
+
         //mark the order cancelled since we are now done
         broker.getOrder().setStatus(Status.Cancelled);
     }

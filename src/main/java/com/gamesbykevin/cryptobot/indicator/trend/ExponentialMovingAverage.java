@@ -22,7 +22,7 @@ public class ExponentialMovingAverage extends Indicator {
         for (int index = 0; index < candles.size(); index++) {
 
             //make sure we have enough data first
-            if (index < getPeriods())
+            if (index < getPeriods() - 1)
                 continue;
 
             //if there are no values yet the first one will be the sma

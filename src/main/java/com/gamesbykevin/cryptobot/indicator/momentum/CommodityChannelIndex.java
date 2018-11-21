@@ -36,7 +36,7 @@ public class CommodityChannelIndex extends Indicator {
         //calculate our final values
         for (int index = 0; index < getTypicalPrice().size(); index++) {
 
-            if (index < getPeriods())
+            if (index < getPeriods() - 1)
                 continue;
 
             //where do we start and end
