@@ -25,10 +25,12 @@ public class JsonHelper {
         String result = "";
 
         HttpURLConnection connection = null;
+        URL url = null;
+        BufferedReader br = null;
 
         try {
 
-            URL url = new URL(link);
+            url = new URL(link);
             connection = (HttpURLConnection)url.openConnection();
 
             //set time out so we aren't waiting forever
@@ -41,7 +43,7 @@ public class JsonHelper {
             if (connection.getResponseCode() != 200)
                 throw new RuntimeException("Failed : HTTP error code : " + connection.getResponseCode());
 
-            BufferedReader br = new BufferedReader(new InputStreamReader((connection.getInputStream())));
+            br = new BufferedReader(new InputStreamReader((connection.getInputStream())));
 
             String output;
 
@@ -50,13 +52,13 @@ public class JsonHelper {
             }
 
             br.close();
-            br = null;
 
         } catch (Exception e) {
 
             //display our endpoint that was giving us problems
             log.info(link);
 
+            //and the following exception
             log.error(e.getMessage(), e);
 
         } finally {
@@ -69,11 +71,12 @@ public class JsonHelper {
                 } catch (Exception ex) {
                     log.error(ex.getMessage(), ex);
                 }
-
             }
-        }
 
-        connection = null;
+            connection = null;
+            br = null;
+            url = null;
+        }
 
         return result;
     }

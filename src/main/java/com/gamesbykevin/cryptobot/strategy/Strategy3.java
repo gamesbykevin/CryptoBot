@@ -1,6 +1,9 @@
 package com.gamesbykevin.cryptobot.strategy;
 
+import com.gamesbykevin.cryptobot.candle.Candle;
 import com.gamesbykevin.cryptobot.indicator.momentum.CommodityChannelIndex;
+
+import java.util.List;
 
 public class Strategy3 extends Strategy {
 
@@ -25,7 +28,7 @@ public class Strategy3 extends Strategy {
     }
 
     @Override
-    public boolean hasSignalBuy() {
+    public boolean hasSignalBuy(List<Candle> candles) {
 
         //get our indicator
         CommodityChannelIndex cci = (CommodityChannelIndex)getIndicator(this.indexCCI);
@@ -43,7 +46,7 @@ public class Strategy3 extends Strategy {
     }
 
     @Override
-    public boolean hasSignalSell() {
+    public boolean hasSignalSell(List<Candle> candles) {
 
         //get our indicator
         CommodityChannelIndex cci = (CommodityChannelIndex)getIndicator(this.indexCCI);

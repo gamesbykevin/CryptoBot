@@ -39,4 +39,8 @@ public class NegativeVolumeIndex extends Indicator {
         }
     }
 
+    @Override
+    public void display() {
+        displayDefault();
+    }
 }

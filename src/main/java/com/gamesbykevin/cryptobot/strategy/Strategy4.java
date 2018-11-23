@@ -1,6 +1,9 @@
 package com.gamesbykevin.cryptobot.strategy;
 
+import com.gamesbykevin.cryptobot.candle.Candle;
 import com.gamesbykevin.cryptobot.indicator.momentum.RelativeStrengthIndex;
+
+import java.util.List;
 
 public class Strategy4 extends Strategy {
 
@@ -22,7 +25,7 @@ public class Strategy4 extends Strategy {
     }
 
     @Override
-    public boolean hasSignalBuy() {
+    public boolean hasSignalBuy(List<Candle> candles) {
 
         //get our indicator
         RelativeStrengthIndex rsi = (RelativeStrengthIndex)getIndicator(indexRSI);
@@ -34,7 +37,7 @@ public class Strategy4 extends Strategy {
     }
 
     @Override
-    public boolean hasSignalSell() {
+    public boolean hasSignalSell(List<Candle> candles) {
 
         //get our indicator
         RelativeStrengthIndex rsi = (RelativeStrengthIndex)getIndicator(indexRSI);

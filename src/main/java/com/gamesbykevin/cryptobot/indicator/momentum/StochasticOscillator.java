@@ -107,4 +107,11 @@ public class StochasticOscillator extends Indicator {
 
         return this.slowK;
     }
+
+    @Override
+    public void display() {
+        display("Fast %K (" + getPeriods() + "): ", getFastK());
+        display("Slow %K (" + periodsKSma  + "): ", getSlowK());
+        display("Slow %D (" + periodsDSma  + "): ", getSlowD());
+    }
 }

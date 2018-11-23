@@ -116,4 +116,9 @@ public class RelativeStrengthIndex extends Indicator {
 
         return this.avgLoss;
     }
+
+    @Override
+    public void display() {
+        displayDefault();
+    }
 }

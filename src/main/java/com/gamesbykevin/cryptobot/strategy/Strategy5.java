@@ -1,6 +1,9 @@
 package com.gamesbykevin.cryptobot.strategy;
 
+import com.gamesbykevin.cryptobot.candle.Candle;
 import com.gamesbykevin.cryptobot.indicator.trend.MovingAverageConvergenceDivergence;
+
+import java.util.List;
 
 public class Strategy5 extends Strategy {
 
@@ -22,24 +25,24 @@ public class Strategy5 extends Strategy {
     }
 
     @Override
-    public boolean hasSignalBuy() {
+    public boolean hasSignalBuy(List<Candle> candles) {
 
         //get our indicator
         MovingAverageConvergenceDivergence macd = (MovingAverageConvergenceDivergence)getIndicator(indexMacd);
 
-        if (getRecent(macd.getValues()) > getRecent(macd.getSignalLine()) && getRecent(macd.getValues()) > 0)
+        if (getRecent(macd.getMacdLine()) > getRecent(macd.getSignalLine()) && getRecent(macd.getMacdLine()) > 0)
             return true;
 
         return false;
     }
 
     @Override
-    public boolean hasSignalSell() {
+    public boolean hasSignalSell(List<Candle> candles) {
 
         //get our indicator
         MovingAverageConvergenceDivergence macd = (MovingAverageConvergenceDivergence)getIndicator(indexMacd);
 
-        if (getRecent(macd.getValues()) > getRecent(macd.getSignalLine()))
+        if (getRecent(macd.getMacdLine()) > getRecent(macd.getSignalLine()))
             return true;
 
         return false;

@@ -1,7 +1,10 @@
 package com.gamesbykevin.cryptobot.strategy;
 
+import com.gamesbykevin.cryptobot.candle.Candle;
 import com.gamesbykevin.cryptobot.candle.Candle.Fields;
 import com.gamesbykevin.cryptobot.indicator.trend.ExponentialMovingAverage;
+
+import java.util.List;
 
 public final class Strategy2 extends Strategy {
 
@@ -23,7 +26,7 @@ public final class Strategy2 extends Strategy {
     }
 
     @Override
-    public boolean hasSignalBuy() {
+    public boolean hasSignalBuy(List<Candle> candles) {
 
         //get our indicators
         ExponentialMovingAverage emaShort = (ExponentialMovingAverage)getIndicator(indexEmaShort);
@@ -43,7 +46,7 @@ public final class Strategy2 extends Strategy {
     }
 
     @Override
-    public boolean hasSignalSell() {
+    public boolean hasSignalSell(List<Candle> candles) {
 
         //get our indicators
         ExponentialMovingAverage emaShort = (ExponentialMovingAverage) getIndicator(indexEmaShort);

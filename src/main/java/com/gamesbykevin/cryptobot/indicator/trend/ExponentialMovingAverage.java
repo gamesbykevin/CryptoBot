@@ -58,4 +58,9 @@ public class ExponentialMovingAverage extends Indicator {
         //return the result
         return ((value - previousEma) * multiplier) + previousEma;
     }
+
+    @Override
+    public void display() {
+        displayDefault();
+    }
 }

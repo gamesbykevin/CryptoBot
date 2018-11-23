@@ -1,6 +1,9 @@
 package com.gamesbykevin.cryptobot.strategy;
 
+import com.gamesbykevin.cryptobot.candle.Candle;
 import com.gamesbykevin.cryptobot.indicator.momentum.StochasticOscillator;
+
+import java.util.List;
 
 public class Strategy6 extends Strategy {
 
@@ -24,15 +27,13 @@ public class Strategy6 extends Strategy {
     }
 
     @Override
-    public boolean hasSignalBuy() {
+    public boolean hasSignalBuy(List<Candle> candles) {
 
         //get our indicator
         StochasticOscillator so = (StochasticOscillator)getIndicator(this.indexSO);
 
         if (getRecent(so.getFastK()) < OVERSOLD) {
-
-            if (getRecent(so.getSlowK(), 2) < getRecent(so.getSlowD(), 2) &&
-                    getRecent(so.getSlowK()) > getRecent(so.getSlowD()))
+            if (getRecent(so.getSlowK(), 2) < getRecent(so.getSlowD(), 2) && getRecent(so.getSlowK()) > getRecent(so.getSlowD()))
                 return true;
         }
 
@@ -41,7 +42,7 @@ public class Strategy6 extends Strategy {
     }
 
     @Override
-    public boolean hasSignalSell() {
+    public boolean hasSignalSell(List<Candle> candles) {
 
         //get our indicator
         StochasticOscillator so = (StochasticOscillator)getIndicator(this.indexSO);

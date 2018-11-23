@@ -60,6 +60,10 @@ public class Broker {
         if (!isDirty() && (beforePrice == null && afterPrice != null || beforePrice.compareTo(afterPrice) != 0))
             setDirty(true);
 
+        //display status as long as we have quantity
+        if (!isDirty() && getQuantity().compareTo(BigDecimal.ZERO) != 0)
+            setDirty(true);
+
         //if flag is set display new information
         if (isDirty()) {
 
@@ -92,13 +96,13 @@ public class Broker {
                 if (getQuantity().compareTo(BigDecimal.ZERO) > 0) {
 
                     //if we have a signal, create the order
-                    if (getStrategy().hasSignalSell())
+                    if (getStrategy().hasSignalSell(getCalculator().getHistory().getCandles()))
                         createOrderSell(this);
 
                 } else {
 
                     //if we have a signal, create the order
-                    if (getStrategy().hasSignalBuy())
+                    if (getStrategy().hasSignalBuy(getCalculator().getHistory().getCandles()))
                         createOrderBuy(this);
                 }
 

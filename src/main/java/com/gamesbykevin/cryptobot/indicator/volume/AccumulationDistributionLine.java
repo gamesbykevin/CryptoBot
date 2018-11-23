@@ -53,4 +53,9 @@ public class AccumulationDistributionLine extends Indicator {
         //return our result
         return (value1 - value2) / value3;
     }
+
+    @Override
+    public void display() {
+        displayDefault();
+    }
 }

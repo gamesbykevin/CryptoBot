@@ -30,7 +30,10 @@ public class OnBalanceVolume extends Indicator {
             }
 
             if (getValues().isEmpty()) {
+
+                //add our first value
                 getValues().add(volume);
+
             } else {
 
                 //get the previous obv
@@ -40,5 +43,10 @@ public class OnBalanceVolume extends Indicator {
                 getValues().add(prev + volume);
             }
         }
+    }
+
+    @Override
+    public void display() {
+        displayDefault();
     }
 }

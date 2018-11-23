@@ -37,4 +37,9 @@ public class PositiveVolumeIndex extends Indicator {
             }
         }
     }
+
+    @Override
+    public void display() {
+        displayDefault();
+    }
 }

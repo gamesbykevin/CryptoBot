@@ -26,18 +26,33 @@ public class SimpleMovingAverage extends Indicator {
             if (index < getPeriods() - 1)
                 continue;
 
-            double sum = 0;
-
-            //check the periods to perform our calculation
-            for (int j = index - getPeriods() + 1; j <= index; j++) {
-
-                //add the total sum
-                sum += getValue(candles.get(j));
-            }
+            //calculate the sma
+            double sma = calculate(candles, index - getPeriods() + 1, index, getField());
 
             //add the value to our list
-            getValues().add((sum / (double)getPeriods()));
+            getValues().add(sma);
         }
+    }
+
+    /**
+     * Calculate the simple moving average of the provided candles
+     * @param candles List of values to calculate
+     * @param start Start index
+     * @param end End index
+     * @param field Which field are we calculating
+     * @return The average of the provided parameters
+     * @throws Exception
+     */
+    public static double calculate(List<Candle> candles, int start, int end, Fields field) throws Exception {
+
+        double sum = 0;
+
+        for (int index = start; index <= end; index++) {
+            sum += getValue(candles.get(index), field);
+        }
+
+        //return our result
+        return (sum / (end - start + 1));
     }
 
     /**
@@ -57,5 +72,10 @@ public class SimpleMovingAverage extends Indicator {
 
         //return our result
         return (sum / (end - start + 1));
+    }
+
+    @Override
+    public void display() {
+        displayDefault();
     }
 }

@@ -57,4 +57,9 @@ public class MoneyFlowIndex extends Indicator {
             getValues().add(moneyFlowIndex);
         }
     }
+
+    @Override
+    public void display() {
+        displayDefault();
+    }
 }

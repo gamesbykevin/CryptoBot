@@ -75,4 +75,9 @@ public class CommodityChannelIndex extends Indicator {
 
         return this.typicalPrice;
     }
+
+    @Override
+    public void display() {
+        displayDefault();
+    }
 }

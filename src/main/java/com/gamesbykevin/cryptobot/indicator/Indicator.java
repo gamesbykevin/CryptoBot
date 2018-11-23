@@ -4,6 +4,7 @@ import com.gamesbykevin.cryptobot.candle.Candle;
 import com.gamesbykevin.cryptobot.candle.Candle.Fields;
 import lombok.Data;
 import lombok.extern.log4j.Log4j;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,9 @@ public abstract class Indicator {
         OnBalanceVolume,
         RelativeStrengthIndex,
         StochasticOscillator,
+
+        //volatility
+        BollingerBands,
 
         //volume
         AccumulationDistributionLine,
@@ -64,29 +68,95 @@ public abstract class Indicator {
         return this.values;
     }
 
+    /*
     public void display() {
+
+        //display the key of this indicator and how many periods it was for
+        display(getValues(), getKey() + " (" + getPeriods() + "): ");
+    }
+
+    public void display(List<Candle> candles, Fields field, String desc) {
+
+        try {
+
+            String tmp = "";
+
+            //display the most recent values
+            for (int index = values.size() - DISPLAY_LIMIT; index < values.size(); index++) {
+
+                //each value is separated by a comma
+                if (tmp != null && tmp.trim().length() > 0)
+                    tmp += ", ";
+
+                tmp += getValue(candles.get(index), field);
+            }
+
+            display(desc + tmp);
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    public void display(List<Double> values, String desc) {
 
         String tmp = "";
 
         //display the most recent calculations
-        for (int index = getValues().size() - DISPLAY_LIMIT; index < getValues().size(); index++) {
+        for (int index = values.size() - DISPLAY_LIMIT; index < values.size(); index++) {
 
             //each value is separated by a comma
             if (tmp != null && tmp.trim().length() > 0)
                 tmp += ", ";
 
-            tmp += getValues().get(index);
+            tmp += values.get(index);
         }
 
-        //display the key of this indicator and how many periods it was for
-        log.info(getKey() + " (" + getPeriods() + "): " + tmp);
+        display(desc + tmp);
     }
+
+    public void display(String desc) {
+        log.info(desc);
+    }
+    */
+
+    protected void displayDefault() {
+        display(getKey() + " (" + getPeriods() + "): ", getValues());
+    }
+
+    protected void display(String desc, List<Double> values) {
+
+        try {
+
+            String tmp = "";
+
+            //display the most recent values
+            for (int index = values.size() - DISPLAY_LIMIT; index < values.size(); index++) {
+
+                //each value is separated by a comma
+                if (tmp != null && tmp.trim().length() > 0)
+                    tmp += ", ";
+
+                tmp += values.get(index);
+            }
+
+            log.info(desc + tmp);
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Create logic to print indicator data
+     */
+    public abstract void display();
 
     protected double getValue(Candle candle) throws Exception {
         return getValue(candle, getField());
     }
 
-    protected double getValue(Candle candle, Fields field) throws Exception {
+    protected static double getValue(Candle candle, Fields field) throws Exception {
 
         //which field?
         switch (field) {

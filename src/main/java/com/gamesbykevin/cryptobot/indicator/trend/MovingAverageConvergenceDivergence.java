@@ -81,4 +81,16 @@ public class MovingAverageConvergenceDivergence extends Indicator {
 
         return this.signal;
     }
+
+    public List<Double> getMacdLine() {
+        return getValues();
+    }
+
+    @Override
+    public void display() {
+        display("MACD Line: ", getMacdLine());
+        display("Signal (" + getPeriods() + "): ", getSignalLine());
+        this.longEma.display();
+        this.shortEma.display();
+    }
 }

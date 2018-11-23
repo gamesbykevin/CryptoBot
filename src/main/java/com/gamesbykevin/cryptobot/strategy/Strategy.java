@@ -24,7 +24,9 @@ public abstract class Strategy {
         Strategy_4,
         Strategy_5,
         Strategy_6,
-        Strategy_7
+        Strategy_7,
+        Strategy_8
+
     }
 
     //which strategy are we using
@@ -65,15 +67,17 @@ public abstract class Strategy {
 
     /**
      * Logic to determine if we have a buy signal
+     * @param candles Market data
      * @return true if buy signal, false otherwise
      */
-    public abstract boolean hasSignalBuy();
+    public abstract boolean hasSignalBuy(List<Candle> candles);
 
     /**
      * Logic to determine if we have a sell signal
+     * @param candles Market data
      * @return true if sell signal, false otherwise
      */
-    public abstract boolean hasSignalSell();
+    public abstract boolean hasSignalSell(List<Candle> candles);
 
     public void display() {
 

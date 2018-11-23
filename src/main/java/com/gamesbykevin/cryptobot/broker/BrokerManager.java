@@ -81,6 +81,9 @@ public class BrokerManager extends Thread implements Runnable {
                 }
             }
 
+            //how many brokers did we create?
+            log.info(this.brokers.size() + " broker(s) created.");
+
             long time = System.currentTimeMillis();
 
             while (true) {
