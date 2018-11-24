@@ -4,6 +4,7 @@ import com.gamesbykevin.cryptobot.order.Order.Status;
 import lombok.extern.log4j.Log4j;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.List;
 
 import static com.gamesbykevin.cryptobot.order.Order.ATTEMPTS_LIMIT;
@@ -137,7 +138,11 @@ public class BrokerHelper {
             //if we sold our stock at the current price, how much funds would we have?
             BigDecimal funds = broker.getFunds().add(broker.getQuantity().multiply(broker.getCalculator().getPrice()));
 
-            desc += broker.getName() + " " + broker.getStrategy().getKey() + ", Available $" + broker.getFunds() + ", quantity: "  + broker.getQuantity() + ", Total Value $" + funds + ", " + broker.getCalculator().getDataFeedUrl();
+            desc += broker.getName() + " " + broker.getStrategy().getKey() +
+                    ", Available " + NumberFormat.getCurrencyInstance().format(broker.getFunds()) +
+                    ", quantity: "  + broker.getQuantity() +
+                    ", Total Value " + NumberFormat.getCurrencyInstance().format(funds) + ", " +
+                    broker.getCalculator().getDataFeedUrl();
             desc += NEW_LINE;
         }
 

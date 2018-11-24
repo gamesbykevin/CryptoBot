@@ -28,7 +28,7 @@ public class OrderHelper {
         broker.getOrder().setPrice(round(ROUND_DECIMALS_QUANTITY, broker.getCalculator().getPrice().subtract(PENNY)));
 
         //determine how much quantity we can buy
-        BigDecimal quantity = broker.getFunds().divide(broker.getOrder().getPrice(), RoundingMode.DOWN);
+        BigDecimal quantity = broker.getFunds().divide(broker.getOrder().getPrice(), RoundingMode.HALF_UP);
 
         //round our quantity to a nice number
         broker.getOrder().setQuantity(round(ROUND_DECIMALS_QUANTITY, quantity));

@@ -1,8 +1,12 @@
 package com.gamesbykevin.cryptobot.calculator;
 
+import com.gamesbykevin.cryptobot.util.Util;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Map;
+
+import static com.gamesbykevin.cryptobot.util.Util.FILE_SEPARATOR;
 
 public final class CalculatorBinance extends Calculator {
 
@@ -16,8 +20,34 @@ public final class CalculatorBinance extends Calculator {
     public static final int PERIOD_INDEX_VOLUME = 5;
     public static final int PERIOD_INDEX_TIME = 6;
 
-    protected CalculatorBinance(final String dataFeedUrl, final String tickerPriceUrl) {
+    protected CalculatorBinance(final String dataFeedUrl, final String tickerPriceUrl) throws Exception {
         super(dataFeedUrl, tickerPriceUrl);
+    }
+
+    @Override
+    public void calculateHistoryFilePath() throws Exception {
+
+        //create our directory if we haven't yet
+        if (getDirectory() == null) {
+
+            //split the data to construct our directories
+            String[] directories = getDataFeedUrl().split("/");
+
+            //identify our parent directory
+            String parent = directories[2].replaceAll("\\.", "_");
+
+            //parse the url to get the other data
+            Map<String, String> params = Util.parseUrl(getDataFeedUrl());
+
+            //identify the stock
+            String product = params.get("symbol");
+
+            //identify the candle size
+            String candle = params.get("interval");
+
+            //now we can construct our file path
+            setDirectory(parent + FILE_SEPARATOR + product + FILE_SEPARATOR + candle);
+        }
     }
 
     @Override

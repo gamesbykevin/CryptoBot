@@ -64,8 +64,6 @@ public class Email implements Runnable {
 
             //we are now sending
             log.info("Sending email...");
-            log.info(subject);
-            log.info(text);
 
             //send the email
             Transport.send(message);
@@ -77,6 +75,10 @@ public class Email implements Runnable {
 
             //print and write error to log
             log.error(e.getMessage(), e);
+
+            //if error print email details
+            log.info(subject);
+            log.info(text);
 
         } finally {
 

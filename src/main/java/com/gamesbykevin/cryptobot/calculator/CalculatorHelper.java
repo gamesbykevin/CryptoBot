@@ -1,13 +1,15 @@
 package com.gamesbykevin.cryptobot.calculator;
 
+import com.sun.org.apache.xml.internal.resolver.readers.ExtendedXMLCatalogReader;
+
 public class CalculatorHelper {
 
     public static final String URL_CONTAINS_BINANCE = "BINANCE";
     public static final String URL_CONTAINS_GDAX = "GDAX";
 
-    public static Calculator create(final String dataFeedUrl, final String tickerPriceUrl) {
+    public static Calculator create(final String dataFeedUrl, final String tickerPriceUrl) throws Exception {
 
-        if (dataFeedUrl == null)
+        if (dataFeedUrl == null || tickerPriceUrl == null)
             return null;
 
         Calculator calculator = null;

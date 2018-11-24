@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.extern.log4j.Log4j;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 
 import static com.gamesbykevin.cryptobot.broker.BrokerHelper.checkOrder;
 import static com.gamesbykevin.cryptobot.broker.BrokerHelper.fillOrder;
@@ -68,7 +69,11 @@ public class Broker {
         if (isDirty()) {
 
             //print broker information
-            log.info("Key: " + getStrategy().getKey() + ", Current Price $" + getCalculator().getPrice() + ", Quantity: " + getQuantity() + ", " + getCalculator().getDataFeedUrl());
+            log.info(
+                    getName() + ": " + getStrategy().getKey() +
+                    ", " + NumberFormat.getCurrencyInstance().format(getCalculator().getPrice()) +
+                    ", Q: " + getQuantity() +
+                    ", " + getCalculator().getDataFeedUrl());
 
             //turn dirty flag off
             setDirty(false);
@@ -105,7 +110,6 @@ public class Broker {
                     if (getStrategy().hasSignalBuy(getCalculator().getHistory().getCandles()))
                         createOrderBuy(this);
                 }
-
                 break;
 
             //if we have a pending order, check it

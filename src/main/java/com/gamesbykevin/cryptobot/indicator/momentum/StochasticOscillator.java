@@ -30,7 +30,7 @@ public class StochasticOscillator extends Indicator {
     public void calculate(List<Candle> candles) throws Exception {
 
         //clear list(s)
-        getValues().clear();
+        getFastK().clear();
         getSlowK().clear();
         getSlowD().clear();
 

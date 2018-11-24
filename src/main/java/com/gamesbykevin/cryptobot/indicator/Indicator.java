@@ -18,11 +18,11 @@ public abstract class Indicator {
      */
     public enum Key {
 
-        MovingAverageConvergenceDivergence,
 
         //trend
-        SimpleMovingAverage,
         ExponentialMovingAverage,
+        MovingAverageConvergenceDivergence,
+        SimpleMovingAverage,
 
         //momentum
         CommodityChannelIndex,
@@ -67,58 +67,6 @@ public abstract class Indicator {
 
         return this.values;
     }
-
-    /*
-    public void display() {
-
-        //display the key of this indicator and how many periods it was for
-        display(getValues(), getKey() + " (" + getPeriods() + "): ");
-    }
-
-    public void display(List<Candle> candles, Fields field, String desc) {
-
-        try {
-
-            String tmp = "";
-
-            //display the most recent values
-            for (int index = values.size() - DISPLAY_LIMIT; index < values.size(); index++) {
-
-                //each value is separated by a comma
-                if (tmp != null && tmp.trim().length() > 0)
-                    tmp += ", ";
-
-                tmp += getValue(candles.get(index), field);
-            }
-
-            display(desc + tmp);
-
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-    }
-
-    public void display(List<Double> values, String desc) {
-
-        String tmp = "";
-
-        //display the most recent calculations
-        for (int index = values.size() - DISPLAY_LIMIT; index < values.size(); index++) {
-
-            //each value is separated by a comma
-            if (tmp != null && tmp.trim().length() > 0)
-                tmp += ", ";
-
-            tmp += values.get(index);
-        }
-
-        display(desc + tmp);
-    }
-
-    public void display(String desc) {
-        log.info(desc);
-    }
-    */
 
     protected void displayDefault() {
         display(getKey() + " (" + getPeriods() + "): ", getValues());

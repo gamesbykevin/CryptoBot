@@ -34,9 +34,7 @@ public class BrokerManager extends Thread implements Runnable {
     private List<Broker> brokers;
 
     public BrokerManager() {
-
-        //create new list of brokers
-        this.brokers = new ArrayList<>();
+        //default constructor
     }
 
     @Override
@@ -62,7 +60,7 @@ public class BrokerManager extends Thread implements Runnable {
                     Broker broker = new Broker();
 
                     //each broker will have a unique name
-                    broker.setName("Broker " + this.brokers.size());
+                    broker.setName("Broker " + (getBrokers().size() + 1) );
 
                     //assign their share of the funds
                     broker.setFunds(share);
@@ -74,27 +72,27 @@ public class BrokerManager extends Thread implements Runnable {
                     broker.setStrategy(StrategyHelper.create(STRATEGIES[i]));
 
                     //add to our list
-                    this.brokers.add(broker);
+                    getBrokers().add(broker);
 
                     //print to console
-                    log.info("Created broker $" + share + ", " + STRATEGIES[i] + ", " + DATA_FEED_URL[j]);
+                    log.info("Created " + broker.getName() + " $" + share + ", " + STRATEGIES[i] + ", " + DATA_FEED_URL[j]);
                 }
             }
 
             //how many brokers did we create?
-            log.info(this.brokers.size() + " broker(s) created.");
+            log.info(getBrokers().size() + " broker(s) created.");
 
             long time = System.currentTimeMillis();
 
             while (true) {
 
                 //update the brokers
-                for (int index = 0; index < this.brokers.size(); index++) {
+                for (int index = 0; index < getBrokers().size(); index++) {
 
                     try {
 
                         //update the current broker
-                        this.brokers.get(index).update();
+                        getBrokers().get(index).update();
 
                     } catch (Exception ex) {
 
@@ -108,7 +106,7 @@ public class BrokerManager extends Thread implements Runnable {
 
                 if (System.currentTimeMillis() - time >= EMAIL_NOTIFICATION_DELAY) {
 
-                    send("CryptoBot Update", getBrokersDetails(this.brokers));
+                    send("CryptoBot Update", getBrokersDetails(getBrokers()));
                     time = System.currentTimeMillis();
 
                 } else {
@@ -121,5 +119,13 @@ public class BrokerManager extends Thread implements Runnable {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    public List<Broker> getBrokers() {
+
+        if (this.brokers == null)
+            this.brokers = new ArrayList<>();
+
+        return this.brokers;
     }
 }

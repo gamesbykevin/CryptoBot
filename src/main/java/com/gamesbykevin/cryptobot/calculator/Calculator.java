@@ -1,10 +1,10 @@
 package com.gamesbykevin.cryptobot.calculator;
 
 import com.gamesbykevin.cryptobot.history.History;
+import com.gamesbykevin.cryptobot.history.HistoryHelper;
 import com.gamesbykevin.cryptobot.util.GsonHelper;
 import com.gamesbykevin.cryptobot.util.JsonHelper;
 import lombok.Data;
-
 import java.math.BigDecimal;
 
 @Data
@@ -22,13 +22,22 @@ public abstract class Calculator {
     //where do we get the current price of the stock we are trading
     private final String tickerPriceUrl;
 
+    //where is our historical data?
+    protected String directory;
+
     /**
      * Default constructor
      */
-    public Calculator(final String dataFeedUrl, final String tickerPriceUrl) {
+    public Calculator(final String dataFeedUrl, final String tickerPriceUrl) throws Exception {
         this.dataFeedUrl = dataFeedUrl;
         this.tickerPriceUrl = tickerPriceUrl;
         this.history = new History();
+
+        //identify our directory
+        calculateHistoryFilePath();
+
+        //load history if (exists)
+        HistoryHelper.load(getHistory(), getDirectory());
     }
 
     public Object getTickerObj(Class classObj) {
@@ -53,5 +62,14 @@ public abstract class Calculator {
         return this.history;
     }
 
+    /**
+     * Logic to update the calculator
+     */
     public abstract void update();
+
+    /**
+     * Get the history file path
+     * @return The path where historical data will be stored
+     */
+    public abstract void calculateHistoryFilePath() throws Exception;
 }
