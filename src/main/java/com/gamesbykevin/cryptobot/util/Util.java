@@ -1,6 +1,6 @@
 package com.gamesbykevin.cryptobot.util;
 
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
@@ -50,11 +50,32 @@ public class Util {
             query_pairs.put(URLDecoder.decode(pair.substring(0, idx), "UTF-8"), URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
         }
 
-        //return our hashmap
+        //return our hash map
         return query_pairs;
     }
 
     public static BigDecimal round(int decimals, BigDecimal value) {
         return value.setScale(decimals, RoundingMode.HALF_DOWN);
+    }
+
+    public static PrintWriter getPrintWriter(final String filename, final String directory) {
+
+        try {
+
+            //create a new directory
+            File file = new File(directory);
+
+            //if the directory does not exist, create it
+            if (!file.exists())
+                file.mkdirs();
+
+            //create new print writer
+            return new PrintWriter(directory + FILE_SEPARATOR + filename, "UTF-8");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

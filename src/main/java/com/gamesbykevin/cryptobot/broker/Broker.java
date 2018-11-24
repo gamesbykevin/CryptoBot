@@ -1,6 +1,7 @@
 package com.gamesbykevin.cryptobot.broker;
 
 import com.gamesbykevin.cryptobot.calculator.Calculator;
+import com.gamesbykevin.cryptobot.history.HistoryHelper;
 import com.gamesbykevin.cryptobot.order.Order;
 import com.gamesbykevin.cryptobot.order.Order.Status;
 import com.gamesbykevin.cryptobot.strategy.Strategy;
@@ -85,8 +86,8 @@ public class Broker {
         //if the time is different we have new data
         if (beforeTime != afterTime) {
 
-            //display what we are calculating
-            log.info("Calculating: " + getStrategy().getKey() + "(" + getCalculator().getDataFeedUrl() + ")");
+            //write market data to file
+            HistoryHelper.write(getCalculator().getHistory(), getCalculator().getDirectory());
 
             //perform calculations with our data
             getStrategy().calculate(getCalculator().getHistory().getCandles());

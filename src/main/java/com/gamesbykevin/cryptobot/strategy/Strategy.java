@@ -3,10 +3,12 @@ package com.gamesbykevin.cryptobot.strategy;
 import com.gamesbykevin.cryptobot.candle.Candle;
 import com.gamesbykevin.cryptobot.indicator.Indicator;
 import lombok.Data;
+import lombok.extern.log4j.Log4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Log4j
 @Data
 public abstract class Strategy {
 
@@ -55,6 +57,8 @@ public abstract class Strategy {
     }
 
     public void calculate(List<Candle> candles) throws Exception {
+
+        log.info("Calculating - " + getKey());
 
         //perform calculations for each indicator
         for (int index = 0; index < getIndicators().size(); index++) {

@@ -7,6 +7,9 @@ import com.gamesbykevin.cryptobot.util.JsonHelper;
 import lombok.Data;
 import java.math.BigDecimal;
 
+import static com.gamesbykevin.cryptobot.history.HistoryHelper.PARENT_DIRECTORY;
+import static com.gamesbykevin.cryptobot.util.Util.FILE_SEPARATOR;
+
 @Data
 public abstract class Calculator {
 
@@ -35,6 +38,9 @@ public abstract class Calculator {
 
         //identify our directory
         calculateHistoryFilePath();
+
+        //append parent directory
+        setDirectory(PARENT_DIRECTORY + FILE_SEPARATOR + getDirectory());
 
         //load history if (exists)
         HistoryHelper.load(getHistory(), getDirectory());

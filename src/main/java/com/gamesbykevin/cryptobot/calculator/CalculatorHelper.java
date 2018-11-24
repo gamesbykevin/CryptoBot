@@ -1,7 +1,5 @@
 package com.gamesbykevin.cryptobot.calculator;
 
-import com.sun.org.apache.xml.internal.resolver.readers.ExtendedXMLCatalogReader;
-
 public class CalculatorHelper {
 
     public static final String URL_CONTAINS_BINANCE = "BINANCE";
