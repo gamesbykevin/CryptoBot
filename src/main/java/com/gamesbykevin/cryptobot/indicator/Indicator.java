@@ -20,6 +20,7 @@ public abstract class Indicator {
 
 
         //trend
+        Envelopes,
         ExponentialMovingAverage,
         MovingAverageConvergenceDivergence,
         SimpleMovingAverage,
@@ -29,6 +30,7 @@ public abstract class Indicator {
         OnBalanceVolume,
         RelativeStrengthIndex,
         StochasticOscillator,
+        TrueStrengthIndex,
 
         //volatility
         BollingerBands,
