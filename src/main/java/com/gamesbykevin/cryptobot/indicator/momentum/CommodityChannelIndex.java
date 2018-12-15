@@ -14,11 +14,20 @@ public class CommodityChannelIndex extends Indicator {
      */
     private static final float CONSTANT_VALUE = .015f;
 
+    //constant value
+    private final float constantValue;
+
     //list of typical prices
     private List<Double> typicalPrice;
 
     public CommodityChannelIndex(int periods) {
+        this(periods, CONSTANT_VALUE);
+    }
+
+    public CommodityChannelIndex(int periods, float constantValue) {
         super(Key.CommodityChannelIndex, periods, null);
+
+        this.constantValue = constantValue;
     }
 
     @Override
@@ -57,7 +66,7 @@ public class CommodityChannelIndex extends Indicator {
             double deviation = (sum / getPeriods());
 
             //calculate our commodity channel index
-            double cci = (getTypicalPrice().get(index) - sma) / (CONSTANT_VALUE * deviation);
+            double cci = (getTypicalPrice().get(index) - sma) / (constantValue * deviation);
 
             //add to our list
             getValues().add(cci);

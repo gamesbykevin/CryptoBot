@@ -18,6 +18,8 @@ public abstract class Indicator {
      */
     public enum Key {
 
+        //misc
+        IchimokuCloud,
 
         //trend
         Envelopes,
