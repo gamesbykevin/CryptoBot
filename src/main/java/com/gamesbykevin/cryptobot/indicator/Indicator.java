@@ -35,7 +35,9 @@ public abstract class Indicator {
         TrueStrengthIndex,
 
         //volatility
+        AverageTrueRange,
         BollingerBands,
+        ChandelierExit,
 
         //volume
         AccumulationDistributionLine,
