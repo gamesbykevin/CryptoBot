@@ -19,6 +19,8 @@ public abstract class Indicator {
     public enum Key {
 
         //misc
+        Aroon,
+        DeMarker,
         IchimokuCloud,
 
         //trend

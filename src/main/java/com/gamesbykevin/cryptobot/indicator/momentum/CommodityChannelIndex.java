@@ -66,7 +66,7 @@ public class CommodityChannelIndex extends Indicator {
             double deviation = (sum / getPeriods());
 
             //calculate our commodity channel index
-            double cci = (getTypicalPrice().get(index) - sma) / (constantValue * deviation);
+            double cci = (getTypicalPrice().get(index) - sma) / (this.constantValue * deviation);
 
             //add to our list
             getValues().add(cci);
